@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --passWithNoTests --runInBand --clearMocks --no-cache",
+    "test:watch": "npm run test -- --watchAll",
     "test:staged": "npm run test -- --findRelatedTests src",
     "test:ci": "npm run test -- --coverage",
     "lint-staged": "lint-staged",
