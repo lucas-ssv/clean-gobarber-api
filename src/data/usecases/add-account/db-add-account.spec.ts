@@ -24,4 +24,15 @@ describe('DbAddAccount usecase', () => {
     await sut.add(fakeAddAccountRequest)
     expect(addSpy).toHaveBeenCalledWith(fakeAddAccountRequest)
   })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const newAccount = await sut.add(mockFakeAddAccountRequest())
+    expect(newAccount).toEqual({
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
+  })
 })

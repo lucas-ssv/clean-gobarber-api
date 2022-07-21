@@ -12,8 +12,10 @@ export const mockFakeAddAccountRequest = (): AddAccountParams => ({
 export class AddAccountRepositoryStub implements AddAccountRepository {
   async add (account: AddAccountParams): Promise<AccountModel> {
     return await Promise.resolve({
+      id: 'any_id',
       name: 'any_name',
-      token: 'any_token'
+      email: 'any_email@mail.com',
+      password: 'any_password'
     })
   }
 }
