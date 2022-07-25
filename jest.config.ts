@@ -3,6 +3,8 @@ export default {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.{js,ts}',
     '!**/node_modules/**',
+    '!<rootDir>/src/domain/**',
+    '!<rootDir>/src/**/protocols/**',
     '!**/dist/**'
   ],
   coverageDirectory: 'coverage',
