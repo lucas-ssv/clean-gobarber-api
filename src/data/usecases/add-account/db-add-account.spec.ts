@@ -1,7 +1,7 @@
 import { DbAddAccount } from './db-add-account'
 import { AddAccountRepositoryStub, mockFakeAddAccountRequest } from '../../tests/mock-add-account-repository'
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
-import { Encrypter } from '../../protocols/encrypt/encrypter'
+import { Encrypter } from '../../protocols/criptography/encrypter'
 import { EncrypterStub } from '../../tests/mock-encrypter'
 
 type SutTypes = {

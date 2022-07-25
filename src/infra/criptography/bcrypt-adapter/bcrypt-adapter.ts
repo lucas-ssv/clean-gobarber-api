@@ -1,11 +1,11 @@
-import { Compare } from '../../../data/protocols/encrypt/compare'
-import { Encrypter } from '../../../data/protocols/encrypt/encrypter'
+import { Compare } from '../../../data/protocols/criptography/compare'
+import { Encrypter } from '../../../data/protocols/criptography/encrypter'
 import bcrypt from 'bcrypt'
 
 export class BcryptAdapter implements Encrypter, Compare {
-  async hash (text: string): Promise<string> {
+  async hash (data: string): Promise<string> {
     const salt = 12
-    const hash = await bcrypt.hash(text, salt)
+    const hash = await bcrypt.hash(data, salt)
     return hash
   }
 
