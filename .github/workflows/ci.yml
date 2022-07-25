@@ -26,6 +26,3 @@ jobs:
 
     - name: Check tests  
       run: npm run test:ci
-
-    - name: Check linting
-      run: npm run eslint
