@@ -5,7 +5,8 @@ import { AddAccountRepository } from '../protocols/db/add-account-repository'
 export const mockFakeAddAccountRequest = (): AddAccountParams => ({
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'any_password'
+  password: 'any_password',
+  isBarber: false
 })
 
 export class AddAccountRepositoryStub implements AddAccountRepository {
@@ -14,7 +15,8 @@ export class AddAccountRepositoryStub implements AddAccountRepository {
       id: 'any_id',
       name: 'any_name',
       email: 'any_email@mail.com',
-      password: 'hashed_password'
+      password: 'hashed_password',
+      isBarber: false
     })
   }
 }

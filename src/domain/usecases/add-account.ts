@@ -4,6 +4,7 @@ export type AddAccountParams = {
   name: string
   email: string
   password: string
+  isBarber: boolean
 }
 
 export interface AddAccount {
