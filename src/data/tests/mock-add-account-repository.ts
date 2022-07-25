@@ -1,12 +1,11 @@
 import { AccountModel } from '../../domain/models/account'
 import { AddAccountParams } from '../../domain/usecases/add-account'
-import { AddAccountRepository } from '../protocols/add-account-repository'
+import { AddAccountRepository } from '../protocols/db/add-account-repository'
 
 export const mockFakeAddAccountRequest = (): AddAccountParams => ({
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'any_password',
-  passwordConfirmation: 'any_password'
+  password: 'any_password'
 })
 
 export class AddAccountRepositoryStub implements AddAccountRepository {
@@ -15,7 +14,7 @@ export class AddAccountRepositoryStub implements AddAccountRepository {
       id: 'any_id',
       name: 'any_name',
       email: 'any_email@mail.com',
-      password: 'any_password'
+      password: 'hashed_password'
     })
   }
 }
