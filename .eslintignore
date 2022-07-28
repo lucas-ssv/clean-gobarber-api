@@ -2,3 +2,4 @@ node_modules
 jest.config.ts
 ormconfig.ts
 coverage
+.env
