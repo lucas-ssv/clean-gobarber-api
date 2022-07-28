@@ -3,6 +3,7 @@ import { AddAccountRepositoryStub, mockFakeAddAccountRequest } from '../../tests
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
 import { Encrypter } from '../../protocols/criptography/encrypter'
 import { EncrypterStub } from '../../tests/mock-encrypter'
+import MockDate from 'mockdate'
 
 type SutTypes = {
   sut: DbAddAccount
@@ -22,6 +23,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAddAccount usecase', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   test('Should call Encrypter with correct values', async () => {
     const { sut, encrypterStub } = makeSut()
     const encryptSpy = jest.spyOn(encrypterStub, 'hash')
@@ -60,7 +69,8 @@ describe('DbAddAccount usecase', () => {
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'hashed_password',
-      isBarber: false
+      isBarber: false,
+      createdAt: new Date()
     })
   })
 

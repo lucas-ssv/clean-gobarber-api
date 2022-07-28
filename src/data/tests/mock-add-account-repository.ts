@@ -16,7 +16,8 @@ export class AddAccountRepositoryStub implements AddAccountRepository {
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'hashed_password',
-      isBarber: false
+      isBarber: false,
+      createdAt: new Date()
     })
   }
 }
