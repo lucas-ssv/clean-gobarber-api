@@ -5,6 +5,7 @@ export default {
     '!**/node_modules/**',
     '!<rootDir>/src/domain/**',
     '!<rootDir>/src/**/protocols/**',
+    '!<rootDir>/src/infra/db/database/**',
     '!**/dist/**'
   ],
   coverageDirectory: 'coverage',

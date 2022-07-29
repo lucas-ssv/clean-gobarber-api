@@ -1,14 +1,29 @@
 import { AccountRepository } from './account-repository'
 import { Account } from '../database/entities/account'
-import { DbHelper } from '../helpers/db-helper'
+import { DataSource } from 'typeorm'
+import { newDb } from 'pg-mem'
+
+let client: any = null
+const db = newDb()
+const connect = async (): Promise<DataSource> => {
+  db.public.registerFunction({
+    implementation: () => 'test',
+    name: 'current_database'
+  })
+  const got = await db.adapters.createTypeormDataSource({
+    type: 'postgres',
+    entities: [Account]
+  })
+  return got
+}
 
 describe('AccountRepository', () => {
   beforeAll(async () => {
-    await DbHelper.connect()
+    client = await (await connect()).initialize()
   })
 
   afterAll(async () => {
-    await DbHelper.clear(Account)
+    await client.destroy()
   })
 
   test('Should return an account on add success', async () => {
