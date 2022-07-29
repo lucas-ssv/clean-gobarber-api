@@ -5,7 +5,6 @@
   },
   "rules": {
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/consistent-type-definitions": "off",
-    "@typescript-eslint/naming-convention": "off"
+    "@typescript-eslint/consistent-type-definitions": "off"
   }
 }
