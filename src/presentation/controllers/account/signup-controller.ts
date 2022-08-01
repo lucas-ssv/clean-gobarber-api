@@ -7,13 +7,16 @@ export class SignUpController implements Controller {
   constructor (private readonly addAccount: AddAccount) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { name, email, password, isBarber } = httpRequest.body
-    if (!name) {
-      return {
-        statusCode: 400,
-        body: new MissingParamError('name')
+    const requiredFields = ['name', 'email']
+    for (const field of requiredFields) {
+      if (!httpRequest.body[field]) {
+        return {
+          statusCode: 400,
+          body: new MissingParamError(field)
+        }
       }
     }
+    const { name, email, password, isBarber } = httpRequest.body
     await this.addAccount.add({
       name,
       email,
