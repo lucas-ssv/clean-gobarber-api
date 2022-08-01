@@ -9,7 +9,7 @@ export const Db = new DataSource({
   password: process.env.POSTGRES_PASSWORD || 'test_pass',
   database: process.env.POSTGRES_DB || 'test_db',
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: ['src/infra/db/database/entities/**/*.ts'],
   migrations: ['src/infra/db/database/migrations/**/*.ts']
 })

@@ -6,6 +6,7 @@ export default {
     '!<rootDir>/src/domain/**',
     '!<rootDir>/src/**/protocols/**',
     '!<rootDir>/src/infra/db/database/**',
+    '!<rootDir>/src/infra/db/ormconfig.ts',
     '!**/dist/**'
   ],
   coverageDirectory: 'coverage',

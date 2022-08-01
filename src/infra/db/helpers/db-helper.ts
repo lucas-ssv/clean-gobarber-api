@@ -11,10 +11,6 @@ export const DbHelper = {
     await client.destroy()
     client = null
   },
-  clear: async (entity: EntityTarget<ObjectLiteral>): Promise<void> => {
-    await client.getRepository(entity).clear()
-    client = null
-  },
   getRepository: async (entity: EntityTarget<ObjectLiteral>): Promise<Repository<ObjectLiteral>> => {
     if (!client) {
       await DbHelper.connect()
