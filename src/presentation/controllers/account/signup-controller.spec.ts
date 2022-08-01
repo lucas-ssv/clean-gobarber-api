@@ -2,6 +2,7 @@ import { SignUpController } from './signup-controller'
 import { AddAccountStub } from '../../test/account/mock-add-account'
 import { mockFakeAddAccountRequest } from '../../test/account/mock-fake-add-account-request'
 import { AddAccount } from '../../../domain/usecases/add-account'
+import { MissingParamError } from '../../errors/missing-param-error'
 
 type SutTypes = {
   sut: SignUpController
@@ -28,5 +29,19 @@ describe('SignUpController', () => {
       password: 'any_password',
       isBarber: false
     })
+  })
+
+  test('Should return 400 if name is not provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+        isBarber: false
+      }
+    })
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError('name'))
   })
 })
