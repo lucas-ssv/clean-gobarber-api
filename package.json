@@ -8,7 +8,7 @@
       "typeorm:run": "npm run typeorm migration:run",
       "typeorm:revert": "npm run typeorm migration:revert",
       "test": "jest --passWithNoTests --runInBand --clearMocks --no-cache",
-      "test:watch": "npm run test -- --watchAll",
+      "test:watch": "npm run test -- --watch",
       "test:staged": "npm run test -- --findRelatedTests src",
       "test:ci": "npm run test -- --coverage",
       "lint-staged": "lint-staged",

@@ -1,12 +1,26 @@
 import { SignUpController } from './signup-controller'
 import { AddAccountStub } from '../../test/account/mock-add-account'
 import { mockFakeAddAccountRequest } from '../../test/account/mock-fake-add-account-request'
+import { AddAccount } from '../../../domain/usecases/add-account'
+
+type SutTypes = {
+  sut: SignUpController
+  addAccountStub: AddAccount
+}
+
+const makeSut = (): SutTypes => {
+  const addAccountStub = new AddAccountStub()
+  const sut = new SignUpController(addAccountStub)
+  return {
+    sut,
+    addAccountStub
+  }
+}
 
 describe('SignUpController', () => {
   test('Should call AddAccount with correct values', async () => {
-    const addAccountStub = new AddAccountStub()
+    const { sut, addAccountStub } = makeSut()
     const addSpy = jest.spyOn(addAccountStub, 'add')
-    const sut = new SignUpController(addAccountStub)
     await sut.handle(mockFakeAddAccountRequest())
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
