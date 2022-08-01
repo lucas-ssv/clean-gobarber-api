@@ -1,5 +1,5 @@
 import { DbAddAccount } from './db-add-account'
-import { AddAccountRepositoryStub, mockFakeAddAccountRequest } from '../../tests/mock-add-account-repository'
+import { AddAccountRepositoryStub, mockFakeAddAccountParams } from '../../tests/mock-add-account-repository'
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
 import { Encrypter } from '../../protocols/criptography/encrypter'
 import { EncrypterStub } from '../../tests/mock-encrypter'
@@ -34,7 +34,7 @@ describe('DbAddAccount usecase', () => {
   test('Should call Encrypter with correct values', async () => {
     const { sut, encrypterStub } = makeSut()
     const encryptSpy = jest.spyOn(encrypterStub, 'hash')
-    const fakeAddAccountRequest = mockFakeAddAccountRequest()
+    const fakeAddAccountRequest = mockFakeAddAccountParams()
     await sut.add(fakeAddAccountRequest)
     expect(encryptSpy).toHaveBeenCalledWith(fakeAddAccountRequest.password)
   })
@@ -44,14 +44,14 @@ describe('DbAddAccount usecase', () => {
     jest.spyOn(encrypterStub, 'hash').mockImplementationOnce(() => {
       throw new Error()
     })
-    const promise = sut.add(mockFakeAddAccountRequest())
+    const promise = sut.add(mockFakeAddAccountParams())
     await expect(promise).rejects.toThrow()
   })
 
   test('Should call AddAccountRepository with correct values', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
-    const fakeAddAccountRequest = mockFakeAddAccountRequest()
+    const fakeAddAccountRequest = mockFakeAddAccountParams()
     await sut.add(fakeAddAccountRequest)
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
@@ -63,7 +63,7 @@ describe('DbAddAccount usecase', () => {
 
   test('Should return an account on success', async () => {
     const { sut } = makeSut()
-    const newAccount = await sut.add(mockFakeAddAccountRequest())
+    const newAccount = await sut.add(mockFakeAddAccountParams())
     expect(newAccount).toEqual({
       id: 'any_id',
       name: 'any_name',
@@ -79,7 +79,7 @@ describe('DbAddAccount usecase', () => {
     jest.spyOn(addAccountRepositoryStub, 'add').mockImplementationOnce(() => {
       throw new Error()
     })
-    const promise = sut.add(mockFakeAddAccountRequest())
+    const promise = sut.add(mockFakeAddAccountParams())
     await expect(promise).rejects.toThrow()
   })
 })
