@@ -3,7 +3,7 @@ import { Account } from '../database/entities/account'
 import { DataSource } from 'typeorm'
 import { newDb } from 'pg-mem'
 
-let client: any = null
+let client: DataSource = null
 const db = newDb()
 const connect = async (): Promise<DataSource> => {
   db.public.registerFunction({
