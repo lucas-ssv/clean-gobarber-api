@@ -7,9 +7,9 @@ export class SignUpController implements Controller {
   constructor (private readonly addAccount: AddAccount) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
+    const requiredFields = ['name', 'email', 'password', 'passwordConfirmation', 'isBarber']
     for (const field of requiredFields) {
-      if (!httpRequest.body[field]) {
+      if (httpRequest.body[field] === undefined) {
         return {
           statusCode: 400,
           body: new MissingParamError(field)
