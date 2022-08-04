@@ -24,7 +24,8 @@ const makeSut = (): SutTypes => {
 
 describe('SignUpController', () => {
   test('Should call AddAccount with correct values', async () => {
-    const { sut, addAccountStub } = makeSut()
+    const { sut, addAccountStub, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(null)
     const addSpy = jest.spyOn(addAccountStub, 'add')
     await sut.handle(mockFakeAddAccountRequest())
     expect(addSpy).toHaveBeenCalledWith({
@@ -41,5 +42,12 @@ describe('SignUpController', () => {
     const fakeAddAccount = mockFakeAddAccountRequest()
     await sut.handle(fakeAddAccount)
     expect(validationSpy).toHaveBeenCalledWith(fakeAddAccount.body)
+  })
+
+  test('Should return 400 if validation returns an error', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockFakeAddAccountRequest())
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new Error())
   })
 })
