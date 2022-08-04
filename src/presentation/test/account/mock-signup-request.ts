@@ -1,6 +1,6 @@
 import { HttpRequest } from '../../protocols/http'
 
-export const mockFakeAddAccountRequest = (): HttpRequest => ({
+export const mockSignUpRequest = (): HttpRequest => ({
   body: {
     name: 'any_name',
     email: 'any_email@mail.com',
