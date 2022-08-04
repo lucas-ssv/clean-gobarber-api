@@ -4,6 +4,7 @@ import { mockFakeAddAccountRequest } from '../../test/account/mock-fake-add-acco
 import { AddAccount } from '../../../domain/usecases/add-account'
 import { Validation } from '../../protocols/validation'
 import { ValidationStub } from '../../test/validation/mock-validation'
+import MockDate from 'mockdate'
 
 type SutTypes = {
   sut: SignUpController
@@ -23,9 +24,16 @@ const makeSut = (): SutTypes => {
 }
 
 describe('SignUpController', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   test('Should call AddAccount with correct values', async () => {
-    const { sut, addAccountStub, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(null)
+    const { sut, addAccountStub } = makeSut()
     const addSpy = jest.spyOn(addAccountStub, 'add')
     await sut.handle(mockFakeAddAccountRequest())
     expect(addSpy).toHaveBeenCalledWith({
@@ -44,10 +52,25 @@ describe('SignUpController', () => {
     expect(validationSpy).toHaveBeenCalledWith(fakeAddAccount.body)
   })
 
-  test('Should return 400 if validation returns an error', async () => {
-    const { sut } = makeSut()
+  test('Should return 400 if Validation returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockFakeAddAccountRequest())
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new Error())
+  })
+
+  test('Should return 201 if AddAccount succeeds', async () => {
+    const { sut } = makeSut()
+    const httpRequest = await sut.handle(mockFakeAddAccountRequest())
+    expect(httpRequest.statusCode).toBe(201)
+    expect(httpRequest.body).toEqual({
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      isBarber: false,
+      createdAt: new Date()
+    })
   })
 })
