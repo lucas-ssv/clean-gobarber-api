@@ -18,12 +18,15 @@ export class SignUpController implements Controller {
       }
     }
     const { name, email, password, isBarber } = httpRequest.body
-    await this.addAccount.add({
+    const account = await this.addAccount.add({
       name,
       email,
       password,
       isBarber
     })
-    return null
+    return {
+      statusCode: 201,
+      body: account
+    }
   }
 }
