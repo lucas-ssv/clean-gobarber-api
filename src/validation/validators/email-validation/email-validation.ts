@@ -1,3 +1,4 @@
+import { InvalidEmailError } from '../../../presentation/errors/invalid-email-error'
 import { Validation } from '../../../presentation/protocols/validation'
 import { EmailValidator } from '../../protocols/email-validator'
 
@@ -8,7 +9,10 @@ export class EmailValidation implements Validation {
   ) {}
 
   validate (input: object): Error {
-    this.emailValidator.isValid(input[this.fieldName])
+    const isValid = this.emailValidator.isValid(input[this.fieldName])
+    if (!isValid) {
+      return new InvalidEmailError()
+    }
     return null
   }
 }
