@@ -11,9 +11,15 @@ describe('EmailValidatorAdapter', () => {
     expect(validatorSpy).toHaveBeenCalledWith('any_email')
   })
 
-  test('Should return success if is a valid email', () => {
+  test('Should return true if is a valid email', () => {
     const sut = makeSut()
     const isValidEmail = sut.isValid('any_email@mail.com')
     expect(isValidEmail).toBeTruthy()
+  })
+
+  test('Should return false if is an invalid email', () => {
+    const sut = makeSut()
+    const isValidEmail = sut.isValid('invalid_email')
+    expect(isValidEmail).toBeFalsy()
   })
 })
