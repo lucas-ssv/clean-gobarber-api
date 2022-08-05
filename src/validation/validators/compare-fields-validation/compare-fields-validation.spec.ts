@@ -7,8 +7,18 @@ const makeSut = (field: string, fieldToCompare: string): CompareFieldsValidation
 
 describe('CompareFieldsValidation', () => {
   test('Should return CompareFieldsError if fields are different', () => {
-    const sut = makeSut('any_field', 'other_field')
-    const error = sut.validate({ field: 'any_value', fieldToCompare: 'invalid_value' })
-    expect(error).toEqual(new CompareFieldsError('any_field', 'other_field'))
+    const field = 'any_field'
+    const fieldToCompare = 'other_field'
+    const sut = makeSut(field, fieldToCompare)
+    const error = sut.validate({ [field]: 'any_value', [fieldToCompare]: 'invalid_value' })
+    expect(error).toEqual(new CompareFieldsError(field, fieldToCompare))
+  })
+
+  test('Should return null if fields are equal', () => {
+    const field = 'any_field'
+    const fieldToCompare = 'other_field'
+    const sut = makeSut(field, fieldToCompare)
+    const error = sut.validate({ [field]: 'any_value', [fieldToCompare]: 'any_value' })
+    expect(error).toBeNull()
   })
 })
