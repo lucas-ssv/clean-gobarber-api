@@ -30,4 +30,14 @@ describe('ValidationComposite', () => {
     const error = sut.validate({ any_email: 'any_email' })
     expect(error).toEqual(new InvalidEmailError())
   })
+
+  test('Should return null if validation succeeds', () => {
+    const validations: Validation[] = [
+      new EmailValidation('any_email', new EmailValidatorAdapter()),
+      new RequiredFieldValidation('any_field')
+    ]
+    const sut = makeSut(validations)
+    const error = sut.validate({ any_email: 'any_email@mail.com', any_field: 'any_value' })
+    expect(error).toBeNull()
+  })
 })
