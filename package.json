@@ -4,6 +4,9 @@
    "description": "",
    "main": "index.js",
    "scripts": {
+      "start": "node dist/main/server.js",
+      "dev": "ts-node src/main/server.ts",
+      "build": "tsc -p tsconfig.build.json",
       "typeorm": "typeorm-ts-node-esm -d src/infra/db/ormconfig.ts",
       "typeorm:run": "npm run typeorm migration:run",
       "typeorm:revert": "npm run typeorm migration:revert",
@@ -12,8 +15,7 @@
       "test:staged": "npm run test -- --findRelatedTests src",
       "test:ci": "npm run test -- --coverage",
       "lint-staged": "lint-staged",
-      "eslint": "eslint src/**",
-      "prepare": "husky install"
+      "eslint": "eslint src/**"
    },
    "keywords": [],
    "author": "Lucas Vieira",

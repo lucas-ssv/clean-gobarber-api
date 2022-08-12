@@ -3,3 +3,6 @@ jest.config.ts
 ormconfig.ts
 coverage
 .env
+dist
+data
+!src/data
