@@ -4,6 +4,7 @@ export default {
     '<rootDir>/src/**/*.{js,ts}',
     '!**/node_modules/**',
     '!<rootDir>/src/domain/**',
+    '!<rootDir>/src/main/**',
     '!<rootDir>/src/**/protocols/**',
     '!<rootDir>/src/infra/db/database/**',
     '!<rootDir>/src/infra/db/ormconfig.ts',
