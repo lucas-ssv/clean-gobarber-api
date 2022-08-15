@@ -3,22 +3,27 @@ import { AddAccountRepositoryStub, mockFakeAddAccountParams } from '../../tests/
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
 import { Encrypter } from '../../protocols/criptography/encrypter'
 import { EncrypterStub } from '../../tests/mock-encrypter'
+import { LoadByEmailRepositoryStub } from '../../tests/mock-load-by-email-repository'
 import MockDate from 'mockdate'
+import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 
 type SutTypes = {
   sut: DbAddAccount
   addAccountRepositoryStub: AddAccountRepository
   encrypterStub: Encrypter
+  loadByEmailRepositoryStub: LoadByEmailRepository
 }
 
 const makeSut = (): SutTypes => {
   const addAccountRepositoryStub = new AddAccountRepositoryStub()
   const encrypterStub = new EncrypterStub()
-  const sut = new DbAddAccount(addAccountRepositoryStub, encrypterStub)
+  const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
+  const sut = new DbAddAccount(addAccountRepositoryStub, encrypterStub, loadByEmailRepositoryStub)
   return {
     sut,
     addAccountRepositoryStub,
-    encrypterStub
+    encrypterStub,
+    loadByEmailRepositoryStub
   }
 }
 
@@ -81,5 +86,12 @@ describe('DbAddAccount usecase', () => {
     })
     const promise = sut.add(mockFakeAddAccountParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call LoadByEmailRepository with correct value', async () => {
+    const { sut, loadByEmailRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail')
+    await sut.add(mockFakeAddAccountParams())
+    expect(loadSpy).toHaveBeenCalledWith(mockFakeAddAccountParams().email)
   })
 })
