@@ -4,3 +4,4 @@ coverage
 dist
 data
 !src/data
+notes.txt
