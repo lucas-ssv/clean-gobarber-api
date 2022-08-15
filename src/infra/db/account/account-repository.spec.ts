@@ -5,6 +5,8 @@ import { DataSource } from 'typeorm'
 
 let client: DataSource = null
 
+const makeSut = (): AccountRepository => new AccountRepository()
+
 describe('AccountRepository', () => {
   beforeAll(async () => {
     client = await (await connect(Account)).initialize()
@@ -15,7 +17,7 @@ describe('AccountRepository', () => {
   })
 
   test('Should return an account on add success', async () => {
-    const sut = new AccountRepository()
+    const sut = makeSut()
     const account = await sut.add({
       name: 'any_name',
       email: 'any_email@mail.com',
@@ -30,7 +32,7 @@ describe('AccountRepository', () => {
   })
 
   test('Should return an account on loadByEmail success', async () => {
-    const sut = new AccountRepository()
+    const sut = makeSut()
     const account = await sut.loadByEmail('any_email@mail.com')
     expect(account).toBeTruthy()
     expect(account.email).toBe('any_email@mail.com')
