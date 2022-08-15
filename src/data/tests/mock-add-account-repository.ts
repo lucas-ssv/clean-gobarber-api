@@ -1,6 +1,7 @@
 import { AccountModel } from '../../domain/models/account'
 import { AddAccountParams } from '../../domain/usecases/add-account'
 import { AddAccountRepository } from '../protocols/db/add-account-repository'
+import { mockAccount } from './mock-account'
 
 export const mockFakeAddAccountParams = (): AddAccountParams => ({
   name: 'any_name',
@@ -11,13 +12,6 @@ export const mockFakeAddAccountParams = (): AddAccountParams => ({
 
 export class AddAccountRepositoryStub implements AddAccountRepository {
   async add (account: AddAccountParams): Promise<AccountModel> {
-    return await Promise.resolve({
-      id: 'any_id',
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
-      isBarber: false,
-      createdAt: new Date()
-    })
+    return await Promise.resolve(mockAccount())
   }
 }
