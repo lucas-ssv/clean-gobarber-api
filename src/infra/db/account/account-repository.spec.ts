@@ -1,25 +1,13 @@
 import { AccountRepository } from './account-repository'
 import { Account } from '../database/entities/account'
+import { connect } from '../../test/mock-pg-mem'
 import { DataSource } from 'typeorm'
-import { newDb } from 'pg-mem'
 
 let client: DataSource = null
-const db = newDb()
-const connect = async (): Promise<DataSource> => {
-  db.public.registerFunction({
-    implementation: () => 'test',
-    name: 'current_database'
-  })
-  const got = await db.adapters.createTypeormDataSource({
-    type: 'postgres',
-    entities: [Account]
-  })
-  return got
-}
 
 describe('AccountRepository', () => {
   beforeAll(async () => {
-    client = await (await connect()).initialize()
+    client = await (await connect(Account)).initialize()
   })
 
   afterAll(async () => {
@@ -39,5 +27,12 @@ describe('AccountRepository', () => {
     expect(account.email).toBe('any_email@mail.com')
     expect(account.password).toBe('any_password')
     expect(account.isBarber).toBe(false)
+  })
+
+  test('Should return an account on loadByEmail success', async () => {
+    const sut = new AccountRepository()
+    const account = await sut.loadByEmail('any_email@mail.com')
+    expect(account).toBeTruthy()
+    expect(account.email).toBe('any_email@mail.com')
   })
 })
