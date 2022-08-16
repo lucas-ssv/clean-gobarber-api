@@ -6,6 +6,7 @@ import { EncrypterStub } from '../../tests/mock-encrypter'
 import { LoadByEmailRepositoryStub } from '../../tests/mock-load-by-email-repository'
 import MockDate from 'mockdate'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
+import { mockAccount } from '../../tests/mock-account'
 
 type SutTypes = {
   sut: DbAddAccount
@@ -93,5 +94,11 @@ describe('DbAddAccount usecase', () => {
     const loadSpy = jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail')
     await sut.add(mockFakeAddAccountParams())
     expect(loadSpy).toHaveBeenCalledWith(mockFakeAddAccountParams().email)
+  })
+
+  test('Should return an account if email not exist', async () => {
+    const { sut } = makeSut()
+    const account = await sut.add(mockFakeAddAccountParams())
+    expect(account).toEqual(mockAccount())
   })
 })
