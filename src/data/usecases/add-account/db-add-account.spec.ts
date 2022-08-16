@@ -96,6 +96,13 @@ describe('DbAddAccount usecase', () => {
     expect(loadSpy).toHaveBeenCalledWith(mockFakeAddAccountParams().email)
   })
 
+  test('Should return null if email already exists', async () => {
+    const { sut, loadByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(mockAccount()))
+    const account = await sut.add(mockFakeAddAccountParams())
+    expect(account).toBeNull()
+  })
+
   test('Should return an account if email not exist', async () => {
     const { sut } = makeSut()
     const account = await sut.add(mockFakeAddAccountParams())
