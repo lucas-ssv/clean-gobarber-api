@@ -3,16 +3,22 @@ import { AddAccountRepositoryStub, mockFakeAddAccountParams } from '../../tests/
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
 import { Encrypter } from '../../protocols/criptography/encrypter'
 import { EncrypterStub } from '../../tests/mock-encrypter'
-import { LoadByEmailRepositoryStub } from '../../tests/mock-load-by-email-repository'
-import MockDate from 'mockdate'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { mockAccount } from '../../tests/mock-account'
+import { AccountModel } from '../../../domain/models/account'
+import MockDate from 'mockdate'
 
 type SutTypes = {
   sut: DbAddAccount
   addAccountRepositoryStub: AddAccountRepository
   encrypterStub: Encrypter
   loadByEmailRepositoryStub: LoadByEmailRepository
+}
+
+class LoadByEmailRepositoryStub implements LoadByEmailRepository {
+  async loadByEmail (email: string): Promise<AccountModel> {
+    return await Promise.resolve(null)
+  }
 }
 
 const makeSut = (): SutTypes => {
@@ -103,7 +109,7 @@ describe('DbAddAccount usecase', () => {
     expect(account).toBeNull()
   })
 
-  test('Should return an account if email not exist', async () => {
+  test('Should return an account on success', async () => {
     const { sut } = makeSut()
     const account = await sut.add(mockFakeAddAccountParams())
     expect(account).toEqual(mockAccount())

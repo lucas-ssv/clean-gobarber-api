@@ -2,6 +2,7 @@ import { DbLoadByEmail } from './db-load-by-email'
 import { LoadByEmailRepositoryStub } from '../../tests/mock-load-by-email-repository'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import MockDate from 'mockdate'
+import { mockAccount } from '../../tests/mock-account'
 
 type SutTypes = {
   sut: DbLoadByEmail
@@ -42,9 +43,16 @@ describe('DbLoadByEmail', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should return null if email already exists', async () => {
-    const { sut } = makeSut()
+  test('Should return null if not find the email provided', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(null)
     const account = await sut.loadByEmail('any_email@mail.com')
     expect(account).toBeNull()
+  })
+
+  test('Should return an account if LoadByEmail succeeds', async () => {
+    const { sut } = makeSut()
+    const account = await sut.loadByEmail('any_email@mail.com')
+    expect(account).toEqual(mockAccount())
   })
 })
