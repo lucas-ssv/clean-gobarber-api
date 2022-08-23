@@ -6,24 +6,29 @@ import { GenerateToken } from '../../protocols/criptography/generate-token'
 import { LoadByEmailRepositoryStub } from '../../tests/db/mock-load-by-email-repository'
 import { HashCompareStub } from '../../tests/criptography/mock-compare'
 import { GenerateTokenStub } from '../../tests/criptography/mock-generate-token'
+import { RefreshTokenRepository } from '../../protocols/db/refresh-token-repository'
+import { RefreshTokenRepositoryStub } from '../../tests/db/mock-refresh-token-repository'
 
 type SutTypes = {
   sut: DbAuthentication
   loadByEmailRepositoryStub: LoadByEmail
   hashCompareStub: Compare
   generateTokenStub: GenerateToken
+  refreshTokenRepositoryStub: RefreshTokenRepository
 }
 
 const makeSut = (): SutTypes => {
   const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
   const hashCompareStub = new HashCompareStub()
   const generateTokenStub = new GenerateTokenStub()
-  const sut = new DbAuthentication(loadByEmailRepositoryStub, hashCompareStub, generateTokenStub)
+  const refreshTokenRepositoryStub = new RefreshTokenRepositoryStub()
+  const sut = new DbAuthentication(loadByEmailRepositoryStub, hashCompareStub, generateTokenStub, refreshTokenRepositoryStub)
   return {
     sut,
     loadByEmailRepositoryStub,
     hashCompareStub,
-    generateTokenStub
+    generateTokenStub,
+    refreshTokenRepositoryStub
   }
 }
 
@@ -75,5 +80,12 @@ describe('DbAuthentication', () => {
     })
     const promise = sut.auth('any_email@mail.com', 'any_password')
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call RefreshTokenRepository with correct values', async () => {
+    const { sut, refreshTokenRepositoryStub } = makeSut()
+    const refreshSpy = jest.spyOn(refreshTokenRepositoryStub, 'refresh')
+    await sut.auth('any_email@mail.com', 'any_password')
+    expect(refreshSpy).toHaveBeenCalledWith('any_token', 'any_id')
   })
 })
