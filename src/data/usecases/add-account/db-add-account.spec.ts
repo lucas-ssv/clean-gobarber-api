@@ -1,10 +1,10 @@
 import { DbAddAccount } from './db-add-account'
-import { AddAccountRepositoryStub, mockFakeAddAccountParams } from '../../tests/mock-add-account-repository'
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
+import { AddAccountRepositoryStub, mockFakeAddAccountParams } from '../../tests/db/mock-add-account-repository'
 import { Encrypter } from '../../protocols/criptography/encrypter'
-import { EncrypterStub } from '../../tests/mock-encrypter'
+import { EncrypterStub } from '../../tests/criptography/mock-encrypter'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
-import { mockAccount } from '../../tests/mock-account'
+import { mockAccount } from '../../tests/db/mock-account'
 import { AccountModel } from '../../../domain/models/account'
 import MockDate from 'mockdate'
 

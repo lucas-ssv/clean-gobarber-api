@@ -1,4 +1,4 @@
-import { AccountModel } from '../../domain/models/account'
+import { AccountModel } from '../../../domain/models/account'
 
 export const mockAccount = (): AccountModel => ({
   id: 'any_id',

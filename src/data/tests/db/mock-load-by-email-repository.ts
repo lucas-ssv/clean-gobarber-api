@@ -1,5 +1,5 @@
-import { AccountModel } from '../../domain/models/account'
-import { LoadByEmailRepository } from '../protocols/db/load-by-email-repository'
+import { AccountModel } from '../../../domain/models/account'
+import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { mockAccount } from './mock-account'
 
 export class LoadByEmailRepositoryStub implements LoadByEmailRepository {

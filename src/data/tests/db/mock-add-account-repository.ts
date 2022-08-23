@@ -1,6 +1,6 @@
-import { AccountModel } from '../../domain/models/account'
-import { AddAccountParams } from '../../domain/usecases/add-account'
-import { AddAccountRepository } from '../protocols/db/add-account-repository'
+import { AccountModel } from '../../../domain/models/account'
+import { AddAccountParams } from '../../../domain/usecases/add-account'
+import { AddAccountRepository } from '../../protocols/db/add-account-repository'
 import { mockAccount } from './mock-account'
 
 export const mockFakeAddAccountParams = (): AddAccountParams => ({

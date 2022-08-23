@@ -1,8 +1,8 @@
 import { DbLoadByEmail } from './db-load-by-email'
-import { LoadByEmailRepositoryStub } from '../../tests/mock-load-by-email-repository'
+import { LoadByEmailRepositoryStub } from '../../tests/db/mock-load-by-email-repository'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
+import { mockAccount } from '../../tests/db/mock-account'
 import MockDate from 'mockdate'
-import { mockAccount } from '../../tests/mock-account'
 
 type SutTypes = {
   sut: DbLoadByEmail
