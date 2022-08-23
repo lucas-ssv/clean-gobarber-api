@@ -3,12 +3,14 @@ import { Authentication } from '../../../domain/usecases/authentication'
 import { LoadByEmail } from '../../../domain/usecases/load-by-email'
 import { Compare } from '../../protocols/criptography/compare'
 import { GenerateToken } from '../../protocols/criptography/generate-token'
+import { RefreshTokenRepository } from '../../protocols/db/refresh-token-repository'
 
 export class DbAuthentication implements Authentication {
   constructor (
     private readonly loadByEmailRepository: LoadByEmail,
     private readonly hashCompare: Compare,
-    private readonly generateToken: GenerateToken
+    private readonly generateToken: GenerateToken,
+    private readonly refreshTokenRepository: RefreshTokenRepository
   ) {}
 
   async auth (email: string, password: string): Promise<AuthAccount> {
@@ -16,7 +18,8 @@ export class DbAuthentication implements Authentication {
     if (account) {
       const isValidCompare = await this.hashCompare.compare(password, account.password)
       if (isValidCompare) {
-        this.generateToken.generate(account.id)
+        const token = this.generateToken.generate(account.id)
+        await this.refreshTokenRepository.refresh(token, account.id)
       }
     }
     return null
