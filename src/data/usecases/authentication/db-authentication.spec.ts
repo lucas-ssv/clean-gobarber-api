@@ -67,4 +67,13 @@ describe('DbAuthentication', () => {
     await sut.auth('any_email@mail.com', 'any_password')
     expect(generateSpy).toHaveBeenCalledWith('any_id')
   })
+
+  test('Should throw if GenerateToken throws', async () => {
+    const { sut, generateTokenStub } = makeSut()
+    jest.spyOn(generateTokenStub, 'generate').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.auth('any_email@mail.com', 'any_password')
+    await expect(promise).rejects.toThrow()
+  })
 })
