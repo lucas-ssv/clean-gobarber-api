@@ -1,29 +1,29 @@
 import { DbAuthentication } from './db-authentication'
-import { LoadByEmailRepositoryStub } from '../../tests/mock-load-by-email-repository'
 import { LoadByEmail } from '../../../domain/usecases/load-by-email'
 import { Compare } from '../../protocols/criptography/compare'
-import { mockAccount } from '../../tests/mock-account'
+import { mockAccount } from '../../tests/db/mock-account'
+import { GenerateToken } from '../../protocols/criptography/generate-token'
+import { LoadByEmailRepositoryStub } from '../../tests/db/mock-load-by-email-repository'
+import { HashCompareStub } from '../../tests/criptography/mock-compare'
+import { GenerateTokenStub } from '../../tests/criptography/mock-generate-token'
 
 type SutTypes = {
   sut: DbAuthentication
   loadByEmailRepositoryStub: LoadByEmail
   hashCompareStub: Compare
-}
-
-class HashCompareStub implements Compare {
-  async compare (data: string, dataToCompare: string): Promise<boolean> {
-    return true
-  }
+  generateTokenStub: GenerateToken
 }
 
 const makeSut = (): SutTypes => {
   const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
   const hashCompareStub = new HashCompareStub()
-  const sut = new DbAuthentication(loadByEmailRepositoryStub, hashCompareStub)
+  const generateTokenStub = new GenerateTokenStub()
+  const sut = new DbAuthentication(loadByEmailRepositoryStub, hashCompareStub, generateTokenStub)
   return {
     sut,
     loadByEmailRepositoryStub,
-    hashCompareStub
+    hashCompareStub,
+    generateTokenStub
   }
 }
 
@@ -59,5 +59,12 @@ describe('DbAuthentication', () => {
     })
     const promise = sut.auth('any_email@mail.com', 'any_password')
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call GenerateToken with correct values', async () => {
+    const { sut, generateTokenStub } = makeSut()
+    const generateSpy = jest.spyOn(generateTokenStub, 'generate')
+    await sut.auth('any_email@mail.com', 'any_password')
+    expect(generateSpy).toHaveBeenCalledWith('any_id')
   })
 })
