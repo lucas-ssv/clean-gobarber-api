@@ -20,6 +20,11 @@ export class DbAuthentication implements Authentication {
       if (isValidCompare) {
         const token = this.generateToken.generate(account.id)
         await this.refreshTokenRepository.refresh(token, account.id)
+        return {
+          name: account.name,
+          email: account.email,
+          token
+        }
       }
     }
     return null
