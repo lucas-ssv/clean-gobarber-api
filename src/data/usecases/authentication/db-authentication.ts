@@ -19,7 +19,7 @@ export class DbAuthentication implements Authentication {
       const isValidCompare = await this.hashCompare.compare(password, account.password)
       if (isValidCompare) {
         const token = this.generateToken.generate(account.id)
-        await this.refreshTokenRepository.refresh(token, account.id)
+        await this.refreshTokenRepository.refreshToken(account.id, token)
         return {
           name: account.name,
           email: account.email,

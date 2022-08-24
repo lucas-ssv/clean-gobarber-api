@@ -20,7 +20,7 @@ export class AccountRepository implements AddAccountRepository, LoadByEmailRepos
     return accountData as AccountModel
   }
 
-  async refresh (token: string, id: string): Promise<void> {
+  async refreshToken (id: string, token: string): Promise<void> {
     const repo = await DbHelper.getRepository(Account)
     await repo.createQueryBuilder()
       .update(Account)

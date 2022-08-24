@@ -85,14 +85,14 @@ describe('DbAuthentication', () => {
 
   test('Should call RefreshTokenRepository with correct values', async () => {
     const { sut, refreshTokenRepositoryStub } = makeSut()
-    const refreshSpy = jest.spyOn(refreshTokenRepositoryStub, 'refresh')
+    const refreshSpy = jest.spyOn(refreshTokenRepositoryStub, 'refreshToken')
     await sut.auth('any_email@mail.com', 'any_password')
-    expect(refreshSpy).toHaveBeenCalledWith('any_token', 'any_id')
+    expect(refreshSpy).toHaveBeenCalledWith('any_id', 'any_token')
   })
 
   test('Should throw if RefreshTokenRepository throws', async () => {
     const { sut, refreshTokenRepositoryStub } = makeSut()
-    jest.spyOn(refreshTokenRepositoryStub, 'refresh').mockImplementationOnce(() => {
+    jest.spyOn(refreshTokenRepositoryStub, 'refreshToken').mockImplementationOnce(() => {
       throw new Error()
     })
     const promise = sut.auth('any_email@mail.com', 'any_password')
