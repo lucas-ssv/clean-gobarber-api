@@ -18,6 +18,9 @@ export class Account {
   @Column({ name: 'is_barber' })
     isBarber: boolean
 
+  @Column({ name: 'access_token', nullable: true })
+    accessToken: string
+
   @CreateDateColumn({ name: 'created_at' })
     createdAt: Date
 
