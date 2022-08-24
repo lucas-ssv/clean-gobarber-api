@@ -20,6 +20,8 @@ services:
     command: bash -c "npm install --omit=dev && npm run start"
     environment:
       - PORT=3333
+      - JWT_SECRET=any_hash_secret
+      - JWT_EXPIRES_IN=365d
     volumes:
       - ./dist/:/usr/src/gobarber-api/dist/
       - ./package.json:/usr/src/gobarber-api/package.json
