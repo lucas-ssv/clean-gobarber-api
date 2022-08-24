@@ -8,6 +8,7 @@ import { HashCompareStub } from '../../tests/criptography/mock-compare'
 import { GenerateTokenStub } from '../../tests/criptography/mock-generate-token'
 import { RefreshTokenRepository } from '../../protocols/db/refresh-token-repository'
 import { RefreshTokenRepositoryStub } from '../../tests/db/mock-refresh-token-repository'
+import { mockAuthAccount } from '../../tests/db/mock-auth-account'
 
 type SutTypes = {
   sut: DbAuthentication
@@ -96,5 +97,11 @@ describe('DbAuthentication', () => {
     })
     const promise = sut.auth('any_email@mail.com', 'any_password')
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return an auth account on success', async () => {
+    const { sut } = makeSut()
+    const authAccount = await sut.auth('any_email@mail.com', 'any_password')
+    expect(authAccount).toEqual(mockAuthAccount())
   })
 })
