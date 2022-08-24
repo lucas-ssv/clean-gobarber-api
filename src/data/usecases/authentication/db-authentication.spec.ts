@@ -2,10 +2,10 @@ import { DbAuthentication } from './db-authentication'
 import { LoadByEmail } from '../../../domain/usecases/load-by-email'
 import { Compare } from '../../protocols/criptography/compare'
 import { mockAccount } from '../../tests/db/mock-account'
-import { GenerateToken } from '../../protocols/criptography/generate-token'
+import { Signer } from '../../protocols/criptography/signer'
 import { LoadByEmailRepositoryStub } from '../../tests/db/mock-load-by-email-repository'
 import { HashCompareStub } from '../../tests/criptography/mock-compare'
-import { GenerateTokenStub } from '../../tests/criptography/mock-generate-token'
+import { GenerateTokenStub } from '../../tests/criptography/mock-signer'
 import { RefreshTokenRepository } from '../../protocols/db/refresh-token-repository'
 import { RefreshTokenRepositoryStub } from '../../tests/db/mock-refresh-token-repository'
 import { mockAuthAccount } from '../../tests/db/mock-auth-account'
@@ -14,7 +14,7 @@ type SutTypes = {
   sut: DbAuthentication
   loadByEmailRepositoryStub: LoadByEmail
   hashCompareStub: Compare
-  generateTokenStub: GenerateToken
+  generateTokenStub: Signer
   refreshTokenRepositoryStub: RefreshTokenRepository
 }
 
@@ -69,14 +69,14 @@ describe('DbAuthentication', () => {
 
   test('Should call GenerateToken with correct values', async () => {
     const { sut, generateTokenStub } = makeSut()
-    const generateSpy = jest.spyOn(generateTokenStub, 'generate')
+    const generateSpy = jest.spyOn(generateTokenStub, 'sign')
     await sut.auth('any_email@mail.com', 'any_password')
     expect(generateSpy).toHaveBeenCalledWith('any_id')
   })
 
   test('Should throw if GenerateToken throws', async () => {
     const { sut, generateTokenStub } = makeSut()
-    jest.spyOn(generateTokenStub, 'generate').mockImplementationOnce(() => {
+    jest.spyOn(generateTokenStub, 'sign').mockImplementationOnce(() => {
       throw new Error()
     })
     const promise = sut.auth('any_email@mail.com', 'any_password')

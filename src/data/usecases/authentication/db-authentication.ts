@@ -2,14 +2,14 @@ import { AuthAccount } from '../../../domain/models/auth-account'
 import { Authentication } from '../../../domain/usecases/authentication'
 import { LoadByEmail } from '../../../domain/usecases/load-by-email'
 import { Compare } from '../../protocols/criptography/compare'
-import { GenerateToken } from '../../protocols/criptography/generate-token'
+import { Signer } from '../../protocols/criptography/signer'
 import { RefreshTokenRepository } from '../../protocols/db/refresh-token-repository'
 
 export class DbAuthentication implements Authentication {
   constructor (
     private readonly loadByEmailRepository: LoadByEmail,
     private readonly hashCompare: Compare,
-    private readonly generateToken: GenerateToken,
+    private readonly generateToken: Signer,
     private readonly refreshTokenRepository: RefreshTokenRepository
   ) {}
 
@@ -18,7 +18,7 @@ export class DbAuthentication implements Authentication {
     if (account) {
       const isValidCompare = await this.hashCompare.compare(password, account.password)
       if (isValidCompare) {
-        const token = this.generateToken.generate(account.id)
+        const token = this.generateToken.sign(account.id)
         await this.refreshTokenRepository.refreshToken(account.id, token)
         return {
           name: account.name,
