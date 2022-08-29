@@ -1,3 +1,3 @@
 export interface Signer {
-  sign: (value: string) => string
+  sign: (value: string) => Promise<string>
 }
