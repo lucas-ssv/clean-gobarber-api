@@ -1,4 +1,5 @@
 import { EmailInUseError } from '../../errors/email-in-use-error'
+import { UnauthorizedError } from '../../errors/unauthorized-error'
 import { HttpResponse } from '../../protocols/http'
 
 export const badRequest = (error: Error): HttpResponse => ({
@@ -19,4 +20,9 @@ export const serverError = (error: Error): HttpResponse => ({
 export const emailInUseError = (): HttpResponse => ({
   statusCode: 400,
   body: new EmailInUseError()
+})
+
+export const unauthorized = (): HttpResponse => ({
+  statusCode: 401,
+  body: new UnauthorizedError()
 })

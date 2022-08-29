@@ -1,5 +1,5 @@
 import { Authentication } from '../../../../domain/usecases/authentication'
-import { badRequest } from '../../../helpers/http/helper'
+import { badRequest, unauthorized } from '../../../helpers/http/helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -16,7 +16,10 @@ export class LoginController implements Controller {
     if (error) {
       return badRequest(error)
     }
-    await this.authentication.auth(email, password)
+    const authAccount = await this.authentication.auth(email, password)
+    if (!authAccount) {
+      return unauthorized()
+    }
     return null
   }
 }
