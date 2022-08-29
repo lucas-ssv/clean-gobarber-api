@@ -4,7 +4,7 @@ import { Authentication } from '../../../../domain/usecases/authentication'
 import { ValidationStub } from '../../../test/validation/mock-validation'
 import { Validation } from '../../../protocols/validation'
 import { mockLoginRequest } from '../../../test/account/mock-login-request'
-import { badRequest, ok, unauthorized } from '../../../helpers/http/helper'
+import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/helper'
 import { mockAuthAccount } from '../../../test/account/mock-auth-account'
 
 type SutTypes = {
@@ -58,5 +58,14 @@ describe('LoginController', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockLoginRequest())
     expect(httpResponse).toEqual(ok(mockAuthAccount()))
+  })
+
+  test('Should return 500 if Authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockLoginRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
