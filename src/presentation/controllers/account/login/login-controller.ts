@@ -1,5 +1,5 @@
 import { Authentication } from '../../../../domain/usecases/authentication'
-import { badRequest, unauthorized } from '../../../helpers/http/helper'
+import { badRequest, ok, unauthorized } from '../../../helpers/http/helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -20,6 +20,6 @@ export class LoginController implements Controller {
     if (!authAccount) {
       return unauthorized()
     }
-    return null
+    return ok(authAccount)
   }
 }
