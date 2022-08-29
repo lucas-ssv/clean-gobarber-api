@@ -1,11 +1,11 @@
 import { SignUpController } from './signup-controller'
-import { AddAccountStub } from '../../test/account/mock-add-account'
-import { mockSignUpRequest } from '../../test/account/mock-signup-request'
-import { AddAccount } from '../../../domain/usecases/add-account'
-import { Validation } from '../../protocols/validation'
-import { ValidationStub } from '../../test/validation/mock-validation'
+import { AddAccountStub } from '../../../test/account/mock-add-account'
+import { mockSignUpRequest } from '../../../test/account/mock-signup-request'
+import { AddAccount } from '../../../../domain/usecases/add-account'
+import { Validation } from '../../../protocols/validation'
+import { ValidationStub } from '../../../test/validation/mock-validation'
+import { EmailInUseError } from '../../../errors/email-in-use-error'
 import MockDate from 'mockdate'
-import { EmailInUseError } from '../../errors/email-in-use-error'
 
 type SutTypes = {
   sut: SignUpController
