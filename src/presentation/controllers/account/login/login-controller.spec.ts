@@ -4,7 +4,7 @@ import { Authentication } from '../../../../domain/usecases/authentication'
 import { ValidationStub } from '../../../test/validation/mock-validation'
 import { Validation } from '../../../protocols/validation'
 import { mockLoginRequest } from '../../../test/account/mock-login-request'
-import { badRequest } from '../../../helpers/http/helper'
+import { badRequest, unauthorized } from '../../../helpers/http/helper'
 
 type SutTypes = {
   sut: LoginController
@@ -44,5 +44,12 @@ describe('LoginController', () => {
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockLoginRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
+  test('Should return 401 if Authentication fails', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(null)
+    const httpResponse = await sut.handle(mockLoginRequest())
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
