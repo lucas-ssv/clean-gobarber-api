@@ -3,11 +3,13 @@ import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
 import { badRequest, created, emailInUseError, serverError } from '../../../helpers/http/helper'
+import { Authentication } from '../../../../domain/usecases/authentication'
 
 export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
-    private readonly validation: Validation
+    private readonly validation: Validation,
+    private readonly authentication: Authentication
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -21,6 +23,7 @@ export class SignUpController implements Controller {
       if (!account) {
         return emailInUseError()
       }
+      await this.authentication.auth(email, password)
       return created(account)
     } catch (error) {
       return serverError(error)
