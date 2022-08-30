@@ -4,23 +4,28 @@ import { mockSignUpRequest } from '../../../test/account/mock-signup-request'
 import { AddAccount } from '../../../../domain/usecases/add-account'
 import { Validation } from '../../../protocols/validation'
 import { ValidationStub } from '../../../test/validation/mock-validation'
+import { AuthenticationStub } from '../../../test/account/mock-authentication'
 import { EmailInUseError } from '../../../errors/email-in-use-error'
 import MockDate from 'mockdate'
+import { Authentication } from '../../../../domain/usecases/authentication'
 
 type SutTypes = {
   sut: SignUpController
   addAccountStub: AddAccount
   validationStub: Validation
+  authenticationStub: Authentication
 }
 
 const makeSut = (): SutTypes => {
   const addAccountStub = new AddAccountStub()
   const validationStub = new ValidationStub()
-  const sut = new SignUpController(addAccountStub, validationStub)
+  const authenticationStub = new AuthenticationStub()
+  const sut = new SignUpController(addAccountStub, validationStub, authenticationStub)
   return {
     sut,
     addAccountStub,
-    validationStub
+    validationStub,
+    authenticationStub
   }
 }
 
@@ -67,6 +72,14 @@ describe('SignUpController', () => {
     const httpResponse = await sut.handle(mockSignUpRequest())
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new EmailInUseError())
+  })
+
+  test('Should call Authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    const httpRequest = mockSignUpRequest()
+    await sut.handle(httpRequest)
+    expect(authSpy).toHaveBeenCalledWith(httpRequest.body.email, httpRequest.body.password)
   })
 
   test('Should return 201 if AddAccount succeeds', async () => {
