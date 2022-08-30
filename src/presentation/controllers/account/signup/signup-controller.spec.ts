@@ -5,10 +5,9 @@ import { AddAccount } from '../../../../domain/usecases/add-account'
 import { Validation } from '../../../protocols/validation'
 import { ValidationStub } from '../../../test/validation/mock-validation'
 import { AuthenticationStub } from '../../../test/account/mock-authentication'
-import { EmailInUseError } from '../../../errors/email-in-use-error'
-import MockDate from 'mockdate'
 import { Authentication } from '../../../../domain/usecases/authentication'
-import { serverError } from '../../../helpers/http/helper'
+import { badRequest, created, emailInUseError, serverError } from '../../../helpers/http/helper'
+import MockDate from 'mockdate'
 
 type SutTypes = {
   sut: SignUpController
@@ -63,16 +62,14 @@ describe('SignUpController', () => {
     const { sut, validationStub } = makeSut()
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockSignUpRequest())
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new Error())
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 
   test('Should return 400 if AddAccount returns null', async () => {
     const { sut, addAccountStub } = makeSut()
     jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(null)
     const httpResponse = await sut.handle(mockSignUpRequest())
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new EmailInUseError())
+    expect(httpResponse).toEqual(emailInUseError())
   })
 
   test('Should call Authentication with correct values', async () => {
@@ -94,16 +91,15 @@ describe('SignUpController', () => {
 
   test('Should return 201 if AddAccount succeeds', async () => {
     const { sut } = makeSut()
-    const httpRequest = await sut.handle(mockSignUpRequest())
-    expect(httpRequest.statusCode).toBe(201)
-    expect(httpRequest.body).toEqual({
+    const httpResponse = await sut.handle(mockSignUpRequest())
+    expect(httpResponse).toEqual(created({
       id: 'any_id',
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password',
       isBarber: false,
       createdAt: new Date()
-    })
+    }))
   })
 
   test('Should return 500 if AddAccount throws', async () => {
@@ -112,7 +108,6 @@ describe('SignUpController', () => {
       throw new Error()
     })
     const httpResponse = await sut.handle(mockSignUpRequest())
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new Error())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
