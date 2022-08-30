@@ -1,5 +1,6 @@
 import { Signer } from '../../../data/protocols/criptography/signer'
 import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 
 export class JwtAdapter implements Signer {
   async sign (value: string): Promise<string> {
