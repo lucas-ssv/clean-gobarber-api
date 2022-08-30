@@ -8,6 +8,7 @@ import { AuthenticationStub } from '../../../test/account/mock-authentication'
 import { EmailInUseError } from '../../../errors/email-in-use-error'
 import MockDate from 'mockdate'
 import { Authentication } from '../../../../domain/usecases/authentication'
+import { serverError } from '../../../helpers/http/helper'
 
 type SutTypes = {
   sut: SignUpController
@@ -80,6 +81,15 @@ describe('SignUpController', () => {
     const httpRequest = mockSignUpRequest()
     await sut.handle(httpRequest)
     expect(authSpy).toHaveBeenCalledWith(httpRequest.body.email, httpRequest.body.password)
+  })
+
+  test('Should return 500 if Authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockSignUpRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('Should return 201 if AddAccount succeeds', async () => {
