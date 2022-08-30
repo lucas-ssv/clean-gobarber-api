@@ -1,13 +1,13 @@
 import { AuthAccount } from '../../../domain/models/auth-account'
 import { Authentication } from '../../../domain/usecases/authentication'
-import { LoadByEmail } from '../../../domain/usecases/load-by-email'
 import { Compare } from '../../protocols/criptography/compare'
 import { Signer } from '../../protocols/criptography/signer'
+import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { RefreshTokenRepository } from '../../protocols/db/refresh-token-repository'
 
 export class DbAuthentication implements Authentication {
   constructor (
-    private readonly loadByEmailRepository: LoadByEmail,
+    private readonly loadByEmailRepository: LoadByEmailRepository,
     private readonly hashCompare: Compare,
     private readonly generateToken: Signer,
     private readonly refreshTokenRepository: RefreshTokenRepository
