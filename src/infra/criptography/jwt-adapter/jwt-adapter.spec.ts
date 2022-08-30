@@ -1,6 +1,6 @@
 import { JwtAdapter } from './jwt-adapter'
 import jwt from 'jsonwebtoken'
-import 'dotenv/config'
+import env from '../../../main/config/env'
 
 jest.mock('jsonwebtoken', () => ({
   sign: () => 'any_token'
@@ -13,8 +13,8 @@ describe('JwtAdapter', () => {
     const sut = makeSut()
     const jwtSpy = jest.spyOn(jwt, 'sign')
     await sut.sign('any_value')
-    expect(jwtSpy).toHaveBeenCalledWith({ id: 'any_value' }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN
+    expect(jwtSpy).toHaveBeenCalledWith({ id: 'any_value' }, env.secret, {
+      expiresIn: env.expiresIn
     })
   })
 
