@@ -5,7 +5,7 @@ import { LoadSchedulesRepository } from '../../protocols/db/load-schedules-repos
 export class DbLoadSchedules implements LoadSchedules {
   constructor (private readonly loadSchedulesRepository: LoadSchedulesRepository) {}
 
-  async load (accountId: string): Promise<ScheduleModel> {
+  async load (accountId: string): Promise<ScheduleModel[]> {
     await this.loadSchedulesRepository.load(accountId)
     return null
   }
