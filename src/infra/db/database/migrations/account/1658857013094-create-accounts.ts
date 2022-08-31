@@ -13,6 +13,9 @@ export class createAccounts1658857013094 implements MigrationInterface {
         name: 'name',
         type: 'varchar'
       }, {
+        name: 'image_url',
+        type: 'varchar'
+      }, {
         name: 'email',
         type: 'varchar',
         isUnique: true

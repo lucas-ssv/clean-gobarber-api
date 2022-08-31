@@ -9,6 +9,9 @@ export class Account {
   @Column()
     name: string
 
+  @Column({ name: 'image_url', nullable: true })
+    imageUrl: string
+
   @Column()
     email: string
 
