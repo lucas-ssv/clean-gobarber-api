@@ -19,8 +19,8 @@ const makeSut = (): SutTypes => {
 describe('DbLoadSchedules', () => {
   test('Should call LoadSchedulesRepository with correct value', async () => {
     const { sut, loadSchedulesRepositoryStub } = makeSut()
-    const loadSpy = jest.spyOn(loadSchedulesRepositoryStub, 'load')
-    await sut.load('any_account_id')
+    const loadSpy = jest.spyOn(loadSchedulesRepositoryStub, 'loadAll')
+    await sut.loadAll('any_account_id')
     expect(loadSpy).toHaveBeenCalledWith('any_account_id')
   })
 })
