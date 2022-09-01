@@ -1,5 +1,5 @@
 import { DbLoadSchedules } from './db-load-schedules'
-import { LoadSchedulesRepositoryStub } from '../../tests/db/mock-load-schedules'
+import { LoadSchedulesRepositoryStub, mockSchedules } from '../../tests/db/mock-load-schedules'
 import { LoadSchedulesRepository } from '../../protocols/db/load-schedules-repository'
 
 type SutTypes = {
@@ -22,5 +22,11 @@ describe('DbLoadSchedules', () => {
     const loadSpy = jest.spyOn(loadSchedulesRepositoryStub, 'loadAll')
     await sut.loadAll('any_account_id')
     expect(loadSpy).toHaveBeenCalledWith('any_account_id')
+  })
+
+  test('Should return a schedules list on success', async () => {
+    const { sut } = makeSut()
+    const schedules = await sut.loadAll('any_account_id')
+    expect(schedules).toEqual(mockSchedules())
   })
 })
