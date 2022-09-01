@@ -29,4 +29,13 @@ describe('DbLoadSchedules', () => {
     const schedules = await sut.loadAll('any_account_id')
     expect(schedules).toEqual(mockSchedules())
   })
+
+  test('Should throw if LoadSchedulesRepository throws', async () => {
+    const { sut, loadSchedulesRepositoryStub } = makeSut()
+    jest.spyOn(loadSchedulesRepositoryStub, 'loadAll').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.loadAll('any_account_id')
+    await expect(promise).rejects.toThrow()
+  })
 })
