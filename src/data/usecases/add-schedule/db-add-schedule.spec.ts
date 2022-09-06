@@ -1,11 +1,25 @@
 import { DbAddSchedule } from './db-add-schedule'
 import { AddScheduleRepositoryStub } from '../../tests/db/mock-add-schedule-repository'
+import { AddScheduleRepository } from '../../protocols/db/add-schedule-repository'
+
+type SutTypes = {
+  sut: DbAddSchedule
+  addScheduleRepositoryStub: AddScheduleRepository
+}
+
+const makeSut = (): SutTypes => {
+  const addScheduleRepositoryStub = new AddScheduleRepositoryStub()
+  const sut = new DbAddSchedule(addScheduleRepositoryStub)
+  return {
+    sut,
+    addScheduleRepositoryStub
+  }
+}
 
 describe('DbAddSchedule', () => {
   test('Should call AddScheduleRepository with correct values', async () => {
-    const addScheduleRepositoryStub = new AddScheduleRepositoryStub()
+    const { sut, addScheduleRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addScheduleRepositoryStub, 'add')
-    const sut = new DbAddSchedule(addScheduleRepositoryStub)
     const schedule = {
       description: 'any_description',
       scheduledTime: new Date(),
