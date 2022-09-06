@@ -1,6 +1,7 @@
 import { DbAddSchedule } from './db-add-schedule'
 import { AddScheduleRepositoryStub } from '../../tests/db/mock-add-schedule-repository'
 import { AddScheduleRepository } from '../../protocols/db/add-schedule-repository'
+import { mockSchedule } from '../../tests/db/mock-schedule'
 
 type SutTypes = {
   sut: DbAddSchedule
@@ -20,16 +21,17 @@ describe('DbAddSchedule', () => {
   test('Should call AddScheduleRepository with correct values', async () => {
     const { sut, addScheduleRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addScheduleRepositoryStub, 'add')
-    const schedule = {
-      description: 'any_description',
-      scheduledTime: new Date(),
-      account: {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com'
-      }
-    }
+    const schedule = mockSchedule()
     await sut.add(schedule)
     expect(addSpy).toHaveBeenCalledWith(schedule)
+  })
+
+  test('Should throw if AddScheduleRepository throws', async () => {
+    const { sut, addScheduleRepositoryStub } = makeSut()
+    jest.spyOn(addScheduleRepositoryStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockSchedule())
+    await expect(promise).rejects.toThrow()
   })
 })
