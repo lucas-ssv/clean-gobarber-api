@@ -1,9 +1,7 @@
-import { AccountModel } from '../models/account'
-
 export type AddScheduleParams = {
   description: string
   scheduledTime: Date
-  account: Omit<AccountModel, 'imageUrl' | 'password' | 'isBarber' | 'createdAt'>
+  accountId: string
 }
 
 export interface AddSchedule {

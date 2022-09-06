@@ -15,23 +15,23 @@ export class createSchedules1662387958010 implements MigrationInterface {
       }, {
         name: 'scheduled_time',
         type: 'timestamp',
-        default: 'CURRENT_TIMESTAMP'
+        default: 'now()'
       }, {
         name: 'account_id',
         type: 'uuid'
       }, {
         name: 'created_at',
         type: 'timestamp',
-        default: 'CURRENT_TIMESTAMP'
+        default: 'now()'
       }, {
         name: 'updated_at',
         type: 'timestamp',
-        default: 'CURRENT_TIMESTAMP'
+        default: 'now()'
       }],
       foreignKeys: [{
         columnNames: ['account_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'schedules',
+        referencedTableName: 'accounts',
         onDelete: 'CASCADE'
       }]
     }))

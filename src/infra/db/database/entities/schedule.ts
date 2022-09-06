@@ -1,5 +1,5 @@
 import { Account } from './account'
-import { Column, Entity, JoinColumn, ManyToMany, PrimaryColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, PrimaryColumn } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 
 @Entity('schedules')
@@ -10,7 +10,7 @@ export class Schedule {
   @Column()
     description: string
 
-  @Column({ name: 'scheduled_time' })
+  @Column({ name: 'scheduled_time', type: 'timestamp with time zone' })
     scheduledTime: Date
 
   @Column({ name: 'account_id' })
@@ -20,10 +20,10 @@ export class Schedule {
   @JoinColumn({ name: 'account_id' })
     account: Account
 
-  @Column({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
     createdAt: Date
 
-  @Column({ name: 'updated_at' })
+  @CreateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
     updatedAt: Date
 
   constructor () {
