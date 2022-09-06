@@ -24,7 +24,7 @@ export class Account {
   @Column({ name: 'access_token', nullable: true })
     accessToken: string
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
     createdAt: Date
 
   constructor () {
