@@ -1,5 +1,5 @@
 import { Account } from './account'
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToMany, PrimaryColumn } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 
 @Entity('schedules')
@@ -16,7 +16,7 @@ export class Schedule {
   @Column({ name: 'account_id' })
     accountId: string
 
-  @ManyToOne(() => Account)
+  @ManyToMany(() => Account)
   @JoinColumn({ name: 'account_id' })
     account: Account
 
