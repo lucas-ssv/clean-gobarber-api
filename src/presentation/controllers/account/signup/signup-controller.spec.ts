@@ -95,6 +95,7 @@ describe('SignUpController', () => {
     expect(httpResponse).toEqual(created({
       id: 'any_id',
       name: 'any_name',
+      imageUrl: null,
       email: 'any_email@mail.com',
       password: 'any_password',
       isBarber: false,
