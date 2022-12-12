@@ -1,7 +1,5 @@
-import { Account } from '../models/account'
-
 export interface AddAccount {
-  add: (account: AccountParams) => Promise<Account>
+  add: (account: AccountParams) => Promise<void>
 }
 
 export type AccountParams = {
