@@ -4,7 +4,7 @@
   "description": "A GoBarber API developed with TDD and clean architecture.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:staged": "npm run test -- --findRelatedTests",
     "test:ci": "npm run test -- --coverage",
     "lint": "eslint . --ext .ts",
