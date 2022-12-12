@@ -45,6 +45,9 @@ describe('DbAddAccount usecase', () => {
     const { sut, addAccountRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
     await sut.add(mockAccount)
-    expect(addSpy).toHaveBeenCalledWith(mockAccount)
+    expect(addSpy).toHaveBeenCalledWith({
+      ...mockAccount,
+      password: 'hashed_password'
+    })
   })
 })
