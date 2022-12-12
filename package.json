@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:staged": "npm run test -- --findRelatedTests",
+    "test:ci": "npm run test -- --coverage",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
     "lint-staged": "lint-staged",

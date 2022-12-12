@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/checkout@v3
+      with:
+        node-version: 19
+        cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check tests
+        run: npm run test:ci
+
+      - name: Check linting
+        run: npm run lint
+
+      - name: Check commit messages
+        uses: wagoid/commitlint-github-action@v5
