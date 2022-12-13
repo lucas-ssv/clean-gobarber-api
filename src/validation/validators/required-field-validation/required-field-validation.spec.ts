@@ -15,4 +15,13 @@ describe('RequiredFieldValidation', () => {
     const error = sut.validate({ [fieldName]: 'any_value' })
     expect(error).toBeNull()
   })
+
+  test('Should return null if field has typeof boolean', () => {
+    const fieldName = 'any_field'
+    const input = { [fieldName]: false }
+    const sut = new RequiredFieldValidation(fieldName)
+    const error = sut.validate(input)
+    expect(typeof input[fieldName]).toBe('boolean')
+    expect(error).toBeNull()
+  })
 })
