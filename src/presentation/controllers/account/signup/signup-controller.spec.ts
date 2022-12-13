@@ -1,20 +1,27 @@
-import { SignUpController } from "./signup-controller"
-import { AddAccountStub } from "../../../tests/account/mock-add-account"
+import { SignUpController } from './signup-controller'
+import { AddAccountStub, mockHttpRequest } from '../../../tests/account/mock-add-account'
+import { AddAccount } from '../../../../domain/usecases/add-account'
+import { Controller } from '../../../protocols/controller'
+
+type SutTypes = {
+  sut: Controller
+  addAccountStub: AddAccount
+}
+
+const makeSut = (): SutTypes => {
+  const addAccountStub = new AddAccountStub()
+  const sut = new SignUpController(addAccountStub)
+  return {
+    sut,
+    addAccountStub
+  }
+}
 
 describe('SignUpController', () => {
   test('Should call AddAccount with correct values', async () => {
-    const mockHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        isBarber: false
-      }
-    }
-    const addAccountStub = new AddAccountStub()
+    const { sut, addAccountStub } = makeSut()
     const addSpy = jest.spyOn(addAccountStub, 'add')
-    const sut = new SignUpController(addAccountStub)
-    await sut.handle(mockHttpRequest)
-    expect(addSpy).toHaveBeenCalledWith(mockHttpRequest.body)
+    await sut.handle(mockHttpRequest())
+    expect(addSpy).toHaveBeenCalledWith(mockHttpRequest().body)
   })
 })
