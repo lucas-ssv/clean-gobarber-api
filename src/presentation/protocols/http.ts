@@ -4,7 +4,7 @@ export interface HttpRequest {
 
 export interface HttpResponse {
   statusCode: HttpStatusCode
-  body: any
+  body?: any
 }
 
 export enum HttpStatusCode {
