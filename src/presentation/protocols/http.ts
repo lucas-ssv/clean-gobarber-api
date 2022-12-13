@@ -8,5 +8,6 @@ export interface HttpResponse {
 }
 
 export enum HttpStatusCode {
+  created = 201,
   badRequest = 400
 }
