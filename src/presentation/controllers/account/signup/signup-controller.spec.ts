@@ -4,7 +4,7 @@ import { AddAccount } from '../../../../domain/usecases/add-account'
 import { Controller } from '../../../protocols/controller'
 import { Validation } from '../../../protocols/validation'
 import { ValidationStub } from '../../../tests/mock-validation'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, created } from '../../../helpers/http/http-helper'
 
 type SutTypes = {
   sut: Controller
@@ -43,5 +43,11 @@ describe('SignUpController', () => {
     const addSpy = jest.spyOn(addAccountStub, 'add')
     await sut.handle(mockHttpRequest())
     expect(addSpy).toHaveBeenCalledWith(mockHttpRequest().body)
+  })
+
+  test('Should return 201 if AddAccount succeeds', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockHttpRequest())
+    expect(httpResponse).toEqual(created())
   })
 })
