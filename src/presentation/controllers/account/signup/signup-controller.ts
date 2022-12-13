@@ -10,7 +10,13 @@ export class SignUpController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    this.validation.validate(httpRequest.body)
+    const error = this.validation.validate(httpRequest.body)
+    if (error) {
+      return {
+        statusCode: 400,
+        body: error
+      }
+    }
     await this.addAccount.add(httpRequest.body)
     return await Promise.resolve(null) as any
   }
