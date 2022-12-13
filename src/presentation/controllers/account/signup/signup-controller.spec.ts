@@ -30,6 +30,16 @@ describe('SignUpController', () => {
     expect(validationSpy).toHaveBeenCalledWith(mockHttpRequest().body)
   })
 
+  test('Should return 400 if Validation returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpResponse = await sut.handle(mockHttpRequest())
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      body: new Error()
+    })
+  })
+
   test('Should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut()
     const addSpy = jest.spyOn(addAccountStub, 'add')
