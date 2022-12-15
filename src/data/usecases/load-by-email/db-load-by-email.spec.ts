@@ -44,4 +44,13 @@ describe('DbLoadByEmail usecase', () => {
     const accountByEmail = await sut.loadByEmail('any_email@mail.com')
     expect(accountByEmail).toEqual(mockAccount())
   })
+
+  test('Should throw if LoadByEmailRepository throws', async () => {
+    const { sut,  loadByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.loadByEmail('any_email@mail.com')
+    await expect(promise).rejects.toThrow()
+  })
 })
