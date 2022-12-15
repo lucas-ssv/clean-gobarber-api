@@ -38,4 +38,10 @@ describe('DbLoadByEmail usecase', () => {
     const accountByEmail = await sut.loadByEmail('any_email@mail.com')
     expect(accountByEmail).toBeNull()
   })
+
+  test('Should return an account if LoadByEmail succeeds', async () => {
+    const { sut } = makeSut()
+    const accountByEmail = await sut.loadByEmail('any_email@mail.com')
+    expect(accountByEmail).toEqual(mockAccount())
+  })
 })
