@@ -8,7 +8,7 @@ export class DbAddAccount implements AddAccount {
   constructor (
     private readonly encrypter: Encrypter,
     private readonly addAccountRepository: AddAccountRepository,
-    private readonly loadByEmailRepository: LoadByEmailRepository
+    private readonly loadByEmailRepository: LoadByEmailRepository<Account>
   ) {}
 
   async add (account: AccountParams): Promise<Account> {

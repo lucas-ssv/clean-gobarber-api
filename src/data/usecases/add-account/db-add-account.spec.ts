@@ -6,12 +6,13 @@ import { EncrypterStub } from '../../tests/criptography/mock-encrypter'
 import { Encrypter } from '../../protocols/criptography/encrypter'
 import { LoadByEmailRepositoryStub } from '../../tests/db/mock-load-by-email-repository'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
+import { Account } from '../../../domain/models/account'
 
 type SutTypes = {
   sut: AddAccount
   addAccountRepositoryStub: AddAccountRepository
   encrypterStub: Encrypter
-  loadByEmailRepositoryStub: LoadByEmailRepository
+  loadByEmailRepositoryStub: LoadByEmailRepository<Account>
 }
 
 const makeSut = (): SutTypes => {

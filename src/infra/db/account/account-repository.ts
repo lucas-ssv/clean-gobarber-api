@@ -1,8 +1,9 @@
 import { AddAccountRepository } from '../../../data/protocols/db/add-account-repository'
 import { LoadByEmailRepository } from '../../../data/protocols/db/load-by-email-repository'
+import { Account } from '../../../domain/models/account'
 import { client } from '../client'
 
-export class AccountRepository implements AddAccountRepository, LoadByEmailRepository {
+export class AccountRepository implements AddAccountRepository, LoadByEmailRepository<Account> {
   async add (account: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountData = await client.account.create({
       data: {
@@ -16,7 +17,7 @@ export class AccountRepository implements AddAccountRepository, LoadByEmailRepos
     return result
   }
 
-  async loadByEmail (email: string): Promise<LoadByEmailRepository.Result> {
+  async loadByEmail (email: string): Promise<Account> {
     const accountByEmail = await client.account.findUnique({
       where: {
         email
