@@ -78,4 +78,11 @@ describe('DbAddAccount usecase', () => {
     await sut.add(mockAccount)
     expect(loadSpy).toHaveBeenCalledWith(mockAccount.email)
   })
+
+  test('Should return null if LoadByEmailRepository returns an account', async () => {
+    const { sut, loadByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(mockAccount()))
+    const account = await sut.add(mockAccountParams())
+    expect(account).toBeNull()
+  })
 })
