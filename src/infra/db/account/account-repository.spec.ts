@@ -39,5 +39,11 @@ describe('AccountRepository', () => {
       expect(accountByEmail).toBeTruthy()
       expect(accountByEmail.email).toBe(mockEmail)
     })
+
+    test('Should return null if any account found', async () => {
+      const sut = new AccountRepository()
+      const accountByEmail = await sut.loadByEmail('any_email@mail.com')
+      expect(accountByEmail).toBeNull()
+    })
   })
 })
