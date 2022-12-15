@@ -14,14 +14,11 @@ describe('AccountRepository', () => {
       isBarber: false
     }
     const sut = new AccountRepository()
-    await sut.add(mockAccount)
-    const account = await client.account.findUnique({ where: {
-      email: mockAccount.email
-    } })
+    const account = await sut.add(mockAccount)
     expect(account).toBeTruthy()
     expect(mockAccount.name).toBe(account?.name)
     expect(mockAccount.email).toBe(account?.email)
     expect(mockAccount.password).toBe(account?.password)
-    expect(mockAccount.isBarber).toBe(account?.is_barber)
+    expect(mockAccount.isBarber).toBe(account?.isBarber)
   })
 })
