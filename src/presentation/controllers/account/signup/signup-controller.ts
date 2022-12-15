@@ -1,5 +1,5 @@
 import { AddAccount } from "../../../../domain/usecases/add-account";
-import { badRequest, created, serverError } from "../../../helpers/http/http-helper";
+import { badRequest, created, emailInUseError, serverError } from "../../../helpers/http/http-helper";
 import { Controller } from "../../../protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../protocols/http";
 import { Validation } from "../../../protocols/validation";
@@ -16,7 +16,10 @@ export class SignUpController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.addAccount.add(httpRequest.body)
+      const account = await this.addAccount.add(httpRequest.body)
+      if (!account) {
+        return emailInUseError()
+      }
       return created()
     } catch (error) {
       return serverError(error)

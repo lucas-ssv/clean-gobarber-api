@@ -9,6 +9,10 @@ export const badRequest = (error: Error): HttpResponse => ({
   body: error
 })
 
+export const emailInUseError = (): HttpResponse => ({
+  statusCode: HttpStatusCode.badRequest
+})
+
 export const serverError = (error: Error): HttpResponse => ({
   statusCode: HttpStatusCode.serverError,
   body: error
