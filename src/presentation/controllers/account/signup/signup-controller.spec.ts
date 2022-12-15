@@ -4,7 +4,7 @@ import { AddAccount } from '../../../../domain/usecases/add-account'
 import { Controller } from '../../../protocols/controller'
 import { Validation } from '../../../protocols/validation'
 import { ValidationStub } from '../../../tests/mock-validation'
-import { badRequest, created, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, created, emailInUseError, serverError } from '../../../helpers/http/http-helper'
 
 type SutTypes = {
   sut: Controller
@@ -58,5 +58,12 @@ describe('SignUpController', () => {
     })
     const httpResponse = await sut.handle(mockHttpRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 400 if AddAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(Promise.resolve(null) as any)
+    const account = await sut.handle(mockHttpRequest())
+    expect(account).toEqual(emailInUseError())
   })
 })
