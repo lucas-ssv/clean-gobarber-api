@@ -1,3 +1,5 @@
+import { mockAccount } from '../../../data/tests/db/mock-add-account-repository'
+import { Account } from '../../../domain/models/account'
 import { AccountParams, AddAccount } from '../../../domain/usecases/add-account'
 
 export const mockHttpRequest = () => ({
@@ -9,5 +11,7 @@ export const mockHttpRequest = () => ({
   }
 })
 export class AddAccountStub implements AddAccount {
-  async add (account: AccountParams): Promise<void> {}
+  async add (account: AccountParams): Promise<Account> {
+    return mockAccount()
+  }
 }

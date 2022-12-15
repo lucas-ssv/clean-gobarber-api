@@ -1,7 +1,7 @@
 import { DbAddAccount } from './db-add-account'
 import { AddAccount } from '../../../domain/usecases/add-account'
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
-import { AddAccountRepositoryStub, mockAccountParams } from '../../tests/db/mock-add-account-repository'
+import { AddAccountRepositoryStub, mockAccount, mockAccountParams } from '../../tests/db/mock-add-account-repository'
 import { EncrypterStub } from '../../tests/criptography/mock-encrypter'
 import { Encrypter } from '../../protocols/criptography/encrypter'
 
@@ -49,6 +49,12 @@ describe('DbAddAccount usecase', () => {
       ...mockAccount,
       password: 'hashed_password'
     })
+  })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.add(mockAccountParams())
+    expect(account).toEqual(mockAccount())
   })
 
   test('Should throw if AddAccountRepository throws', async () => {
