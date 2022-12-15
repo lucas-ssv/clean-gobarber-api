@@ -6,5 +6,5 @@ import { AccountRepository } from '../../../../infra/db/account/account-reposito
 export const makeDbAddAccount = (): AddAccount => {
   const encrypter = new BcryptAdapter()
   const accountRepository = new AccountRepository()
-  return new DbAddAccount(encrypter, accountRepository)
+  return new DbAddAccount(encrypter, accountRepository, accountRepository)
 }
