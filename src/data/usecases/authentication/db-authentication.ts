@@ -17,10 +17,15 @@ export class DbAuthentication implements Authentication {
     if (account) {
       const isPasswordMatch = await this.compare.compare(password, account.password)
       if (isPasswordMatch) {
-        await this.signer.sign({
+        const token = await this.signer.sign({
           name: account.name,
           email
         })
+        return {
+          name: account.name,
+          email,
+          token
+        }
       }
     }
     return null as any
