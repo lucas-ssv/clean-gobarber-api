@@ -10,7 +10,7 @@ export class BcryptAdapter implements Encrypter, Compare {
   }
 
   async compare (value: string, valueToCompare: string): Promise<boolean> {
-    await bcrypt.compare(value, valueToCompare)
-    return await Promise.resolve(true)
+    const isCompareMatch = await bcrypt.compare(value, valueToCompare)
+    return isCompareMatch
   }
 }
