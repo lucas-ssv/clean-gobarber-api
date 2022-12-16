@@ -65,4 +65,13 @@ describe('DbAuthentication usecase', () => {
     const authAccount = await sut.auth('any_email@mail.com', 'any_password')
     expect(authAccount).toBeNull()
   })
+
+  test('Should throw if Compare throws', async () => {
+    const { sut, compareStub } = makeSut()
+    jest.spyOn(compareStub, 'compare').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.auth('any_email@mail.com', 'any_password')
+    await expect(promise).rejects.toThrow()
+  })
 })
