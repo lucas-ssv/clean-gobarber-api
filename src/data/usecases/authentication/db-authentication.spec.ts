@@ -89,4 +89,13 @@ describe('DbAuthentication usecase', () => {
       email: 'any_email@mail.com'
     })
   })
+
+  test('Should throw if Signer throws', async () => {
+    const { sut, signerStub } = makeSut()
+    jest.spyOn(signerStub, 'sign').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.auth('any_email@mail.com', 'any_password')
+    await expect(promise).rejects.toThrow()
+  })
 })
