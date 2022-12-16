@@ -98,4 +98,14 @@ describe('DbAuthentication usecase', () => {
     const promise = sut.auth('any_email@mail.com', 'any_password')
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an auth account on success', async () => {
+    const { sut } = makeSut()
+    const authAccount = await sut.auth('any_email@mail.com', 'any_password')
+    expect(authAccount).toEqual({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      token: 'any_token'
+    })
+  })
 })
