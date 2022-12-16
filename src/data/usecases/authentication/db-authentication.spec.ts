@@ -4,11 +4,14 @@ import { Account } from '../../../domain/models/account'
 import { mockAccount } from '../../tests/db/mock-add-account-repository'
 import { CompareStub } from '../../tests/criptography/mock-compare'
 import { Compare } from '../../protocols/criptography/compare'
+import { SignerStub } from '../../tests/criptography/mock-signer'
+import { Signer } from '../../protocols/criptography/signer'
 
 type SutTypes = {
   sut: DbAuthentication
   loadByEmailRepositoryStub: LoadByEmailRepository<Account>
   compareStub: Compare
+  signerStub: Signer
 }
 
 class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
@@ -20,11 +23,13 @@ class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
 const makeSut = (): SutTypes => {
   const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
   const compareStub = new CompareStub()
-  const sut = new DbAuthentication(loadByEmailRepositoryStub, compareStub)
+  const signerStub = new SignerStub()
+  const sut = new DbAuthentication(loadByEmailRepositoryStub, compareStub, signerStub)
   return {
     sut,
     loadByEmailRepositoryStub,
-    compareStub
+    compareStub,
+    signerStub
   }
 }
 
@@ -73,5 +78,15 @@ describe('DbAuthentication usecase', () => {
     })
     const promise = sut.auth('any_email@mail.com', 'any_password')
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call Signer with correct value', async () => {
+    const { sut, signerStub } = makeSut()
+    const signerSpy = jest.spyOn(signerStub, 'sign')
+    await sut.auth('any_email@mail.com', 'any_password')
+    expect(signerSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com'
+    })
   })
 })
