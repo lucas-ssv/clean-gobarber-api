@@ -39,8 +39,8 @@ describe('DbAuthentication usecase', () => {
   test('Should return null if there is no account', async () => {
     const { sut, loadByEmailRepositoryStub } = makeSut()
     jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null) as any)
-    const account = await sut.auth('any_email@mail.com', 'any_password')
-    expect(account).toBeNull()
+    const authAccount = await sut.auth('any_email@mail.com', 'any_password')
+    expect(authAccount).toBeNull()
   })
 
   test('Should throw if LoadByEmailRepository throws', async () => {
@@ -57,5 +57,12 @@ describe('DbAuthentication usecase', () => {
     const compareSpy = jest.spyOn(compareStub, 'compare')
     await sut.auth('any_email@mail.com', 'any_password')
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
+  })
+
+  test('Should return null if Compare is not valid', async () => {
+    const { sut, compareStub } = makeSut()
+    jest.spyOn(compareStub, 'compare').mockReturnValueOnce(Promise.resolve(false))
+    const authAccount = await sut.auth('any_email@mail.com', 'any_password')
+    expect(authAccount).toBeNull()
   })
 })
