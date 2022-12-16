@@ -2,10 +2,13 @@ import { DbAuthentication } from './db-authentication'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { Account } from '../../../domain/models/account'
 import { mockAccount } from '../../tests/db/mock-add-account-repository'
+import { CompareStub } from '../../tests/criptography/mock-compare'
+import { Compare } from '../../protocols/criptography/compare'
 
 type SutTypes = {
   sut: DbAuthentication
   loadByEmailRepositoryStub: LoadByEmailRepository<Account>
+  compareStub: Compare
 }
 
 class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
@@ -16,10 +19,12 @@ class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
 
 const makeSut = (): SutTypes => {
   const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
-  const sut = new DbAuthentication(loadByEmailRepositoryStub)
+  const compareStub = new CompareStub()
+  const sut = new DbAuthentication(loadByEmailRepositoryStub, compareStub)
   return {
     sut,
-    loadByEmailRepositoryStub
+    loadByEmailRepositoryStub,
+    compareStub
   }
 }
 
@@ -45,5 +50,12 @@ describe('DbAuthentication usecase', () => {
     })
     const promise = sut.auth('any_email@mail.com', 'any_password')
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call Compare with correct value', async () => {
+    const { sut, compareStub } = makeSut()
+    const compareSpy = jest.spyOn(compareStub, 'compare')
+    await sut.auth('any_email@mail.com', 'any_password')
+    expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 })
