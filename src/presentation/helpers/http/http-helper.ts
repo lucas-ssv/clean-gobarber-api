@@ -15,6 +15,11 @@ export const emailInUseError = (): HttpResponse => ({
   body: new EmailInUseError()
 })
 
+export const notFound = (error: Error): HttpResponse => ({
+  statusCode: HttpStatusCode.notFound,
+  body: error
+})
+
 export const serverError = (error: Error): HttpResponse => ({
   statusCode: HttpStatusCode.serverError,
   body: error
