@@ -10,6 +10,13 @@ export const mockHttpRequest = () => ({
     isBarber: false
   }
 })
+
+export const mockSignInRequest = () => ({
+  body: {
+    email: 'any_email@mail.com',
+    password: 'any_password'
+  }
+})
 export class AddAccountStub implements AddAccount {
   async add (account: AccountParams): Promise<Account> {
     return mockAccount()
