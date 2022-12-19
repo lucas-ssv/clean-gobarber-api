@@ -2,26 +2,19 @@ import { SignInController } from './signin-controller'
 import { mockSignInRequest } from '../../../tests/account/mock-add-account'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { Validation } from '../../../protocols/validation'
-import { badRequest, notFound } from '../../../helpers/http/http-helper'
-import { LoadByEmailStub } from '../../../tests/account/mock-load-by-email'
-import { LoadByEmail } from '../../../../domain/usecases/load-by-email'
-import { Account } from '../../../../domain/models/account'
-import { InvalidAccountError } from '../../../errors/invalid-account-error'
+import { badRequest } from '../../../helpers/http/http-helper'
 
 type SutTypes = {
   sut: SignInController,
   validationStub: Validation
-  loadByEmailStub: LoadByEmail<Account>
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub()
-  const loadByEmailStub = new LoadByEmailStub()
-  const sut = new SignInController(validationStub, loadByEmailStub)
+  const sut = new SignInController(validationStub)
   return {
     sut,
-    validationStub,
-    loadByEmailStub
+    validationStub
   }
 }
 
@@ -38,37 +31,5 @@ describe('SignInController', () => {
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockSignInRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
-  })
-
-  test('Should throw if Validation throws', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => {
-      throw new Error()
-    })
-    const promise = sut.handle(mockSignInRequest())
-    await expect(promise).rejects.toThrow()
-  })
-
-  test('Should call LoadByEmail with correct value', async () => {
-    const { sut, loadByEmailStub } = makeSut()
-    const loadSpy = jest.spyOn(loadByEmailStub, 'loadByEmail')
-    await sut.handle(mockSignInRequest())
-    expect(loadSpy).toHaveBeenCalledWith(mockSignInRequest().body.email)
-  })
-
-  test('Should return 404 if LoadByEmail not return an account', async () => {
-    const { sut, loadByEmailStub } = makeSut()
-    jest.spyOn(loadByEmailStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null) as any)
-    const httpResponse = await sut.handle(mockSignInRequest())
-    expect(httpResponse).toEqual(notFound(new InvalidAccountError()))
-  })
-
-  test('Should throw if LoadByEmail throws', async () => {
-    const { sut, loadByEmailStub } = makeSut()
-    jest.spyOn(loadByEmailStub, 'loadByEmail').mockImplementationOnce(() => {
-      throw new Error()
-    })
-    const promise = sut.handle(mockSignInRequest())
-    await expect(promise).rejects.toThrow()
   })
 })
