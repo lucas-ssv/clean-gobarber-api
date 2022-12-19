@@ -54,4 +54,13 @@ describe('SignInController', () => {
     await sut.handle(mockSignInRequest())
     expect(loadSpy).toHaveBeenCalledWith(mockSignInRequest().body.email)
   })
+
+  test('Should throw if LoadByEmail throws', async () => {
+    const { sut, loadByEmailStub } = makeSut()
+    jest.spyOn(loadByEmailStub, 'loadByEmail').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.handle(mockSignInRequest())
+    await expect(promise).rejects.toThrow()
+  })
 })
