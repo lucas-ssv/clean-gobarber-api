@@ -1,11 +1,11 @@
 import { DbAuthentication } from './db-authentication'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { Account } from '../../../domain/models/account'
-import { mockAccount } from '../../tests/db/mock-add-account-repository'
 import { CompareStub } from '../../tests/criptography/mock-compare'
 import { Compare } from '../../protocols/criptography/compare'
 import { SignerStub } from '../../tests/criptography/mock-signer'
 import { Signer } from '../../protocols/criptography/signer'
+import { mockAccount } from '../../../domain/tests/account/mock-account'
 
 type SutTypes = {
   sut: DbAuthentication

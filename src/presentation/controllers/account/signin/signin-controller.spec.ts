@@ -3,18 +3,24 @@ import { mockSignInRequest } from '../../../tests/account/mock-add-account'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { Validation } from '../../../protocols/validation'
 import { badRequest } from '../../../helpers/http/http-helper'
+import { LoadByEmailStub } from '../../../tests/account/mock-load-by-email'
+import { LoadByEmail } from '../../../../domain/usecases/load-by-email'
+import { Account } from '../../../../domain/models/account'
 
 type SutTypes = {
   sut: SignInController,
   validationStub: Validation
+  loadByEmailStub: LoadByEmail<Account>
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub()
-  const sut = new SignInController(validationStub)
+  const loadByEmailStub = new LoadByEmailStub()
+  const sut = new SignInController(validationStub, loadByEmailStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    loadByEmailStub
   }
 }
 
@@ -40,5 +46,12 @@ describe('SignInController', () => {
     })
     const promise = sut.handle(mockSignInRequest())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call LoadByEmail with correct value', async () => {
+    const { sut, loadByEmailStub } = makeSut()
+    const loadSpy = jest.spyOn(loadByEmailStub, 'loadByEmail')
+    await sut.handle(mockSignInRequest())
+    expect(loadSpy).toHaveBeenCalledWith(mockSignInRequest().body.email)
   })
 })

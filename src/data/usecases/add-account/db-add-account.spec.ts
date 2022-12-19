@@ -1,12 +1,13 @@
 import { DbAddAccount } from './db-add-account'
 import { AddAccount } from '../../../domain/usecases/add-account'
 import { AddAccountRepository } from '../../protocols/db/add-account-repository'
-import { AddAccountRepositoryStub, mockAccount, mockAccountParams } from '../../tests/db/mock-add-account-repository'
+import { AddAccountRepositoryStub, mockAccountParams } from '../../tests/db/mock-add-account-repository'
 import { EncrypterStub } from '../../tests/criptography/mock-encrypter'
 import { Encrypter } from '../../protocols/criptography/encrypter'
 import { LoadByEmailRepositoryStub } from '../../tests/db/mock-load-by-email-repository'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { Account } from '../../../domain/models/account'
+import { mockAccount } from '../../../domain/tests/account/mock-account'
 
 type SutTypes = {
   sut: AddAccount

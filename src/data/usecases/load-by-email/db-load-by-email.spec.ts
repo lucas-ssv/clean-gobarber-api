@@ -2,7 +2,7 @@ import { DbLoadByEmail } from './db-load-by-email'
 import { LoadByEmail } from '../../../domain/usecases/load-by-email'
 import { Account } from '../../../domain/models/account'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
-import { mockAccount } from '../../tests/db/mock-add-account-repository'
+import { mockAccount } from '../../../domain/tests/account/mock-account'
 
 type SutTypes = {
   sut: LoadByEmail<Account>
