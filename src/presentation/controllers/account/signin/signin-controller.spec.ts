@@ -32,4 +32,13 @@ describe('SignInController', () => {
     const httpResponse = await sut.handle(mockSignInRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
   })
+
+  test('Should throw if Validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.handle(mockSignInRequest())
+    await expect(promise).rejects.toThrow()
+  })
 })
