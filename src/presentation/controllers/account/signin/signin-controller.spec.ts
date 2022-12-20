@@ -2,7 +2,7 @@ import { SignInController } from './signin-controller'
 import { mockSignInRequest } from '../../../tests/account/mock-add-account'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { Validation } from '../../../protocols/validation'
-import { badRequest, notFound, ok } from '../../../helpers/http/http-helper'
+import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { AuthenticationStub, mockAuthAccount } from '../../../tests/account/mock-authentication'
 import { Authentication } from '../../../../domain/usecases/authentication'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
@@ -57,5 +57,14 @@ describe('SignInController', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockSignInRequest())
     expect(httpResponse).toEqual(ok(mockAuthAccount()))
+  })
+
+  test('Should return 500 if Authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockSignInRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
