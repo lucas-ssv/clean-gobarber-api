@@ -6,7 +6,7 @@ export class DbLoadScheduledTimes implements LoadScheduledTimes {
   constructor (private readonly loadScheduledTimesRepository: LoadScheduledTimesRepository) {}
 
   async loadAll (): Promise<ScheduledTimeResult[]> {
-    await this.loadScheduledTimesRepository.loadAll()
-    return await Promise.resolve(null) as any
+    const scheduledTimes = await this.loadScheduledTimesRepository.loadAll()
+    return scheduledTimes
   }
 }
