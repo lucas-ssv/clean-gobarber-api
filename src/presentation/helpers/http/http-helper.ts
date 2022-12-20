@@ -1,6 +1,11 @@
 import { EmailInUseError } from '../../errors/email-in-use-error'
 import { HttpResponse, HttpStatusCode } from '../../protocols/http'
 
+export const ok = (data: any): HttpResponse => ({
+  statusCode: HttpStatusCode.ok,
+  body: data
+})
+
 export const created = (): HttpResponse => ({
   statusCode: HttpStatusCode.created
 })

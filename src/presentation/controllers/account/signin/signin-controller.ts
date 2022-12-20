@@ -1,6 +1,6 @@
 import { Authentication } from '../../../../domain/usecases/authentication'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
-import { badRequest, notFound } from '../../../helpers/http/http-helper'
+import { badRequest, notFound, ok } from '../../../helpers/http/http-helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -21,6 +21,6 @@ export class SignInController implements Controller {
     if (!authAccount) {
       return notFound(new InvalidAccountError())
     }
-    return await Promise.resolve(null) as any
+    return ok(authAccount)
   }
 }
