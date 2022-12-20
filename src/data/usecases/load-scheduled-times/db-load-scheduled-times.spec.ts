@@ -1,5 +1,5 @@
 import { DbLoadScheduledTimes } from './db-load-scheduled-times'
-import { LoadScheduledTimesRepositoryStub } from '../../tests/db/mock-load-scheduled-times-repository'
+import { LoadScheduledTimesRepositoryStub, mockScheduledTimes } from '../../tests/db/mock-load-scheduled-times-repository'
 import { LoadScheduledTimesRepository } from '../../protocols/db/load-scheduled-times-repository'
 
 type SutTypes = {
@@ -22,5 +22,11 @@ describe('DbLoadScheduledTimes usecase', () => {
     const loadSpy = jest.spyOn(loadScheduledTimesRepositoryStub, 'loadAll')
     await sut.loadAll()
     expect(loadSpy).toHaveBeenCalled()
+  })
+
+  test('Should return a list of scheduled times on success', async () => {
+    const { sut } = makeSut()
+    const scheduledTimes = await sut.loadAll()
+    expect(scheduledTimes).toEqual(mockScheduledTimes())
   })
 })
