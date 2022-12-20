@@ -3,7 +3,12 @@ import { client } from '../client'
 
 describe('AccountRepository', () => {
   beforeEach(async () => {
+    await client.scheduledTimes.deleteMany()
     await client.account.deleteMany()
+  })
+
+  afterEach(async () => {
+    await client.scheduledTimes.deleteMany()
   })
 
   describe('add()', () => {

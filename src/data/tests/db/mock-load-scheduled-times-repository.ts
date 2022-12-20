@@ -2,6 +2,7 @@ import { ScheduledTimeResult } from '../../../domain/models/scheduled-time-resul
 import { LoadScheduledTimesRepository } from '../../protocols/db/load-scheduled-times-repository'
 
 export const mockScheduledTimes = (): ScheduledTimeResult[] => ([{
+  id: 'any_id',
   time: 'any_time',
   account: {
     id: 'any_id',
@@ -11,6 +12,7 @@ export const mockScheduledTimes = (): ScheduledTimeResult[] => ([{
     isBarber: false
   }
 }, {
+  id: 'other_id',
   time: 'other_time',
   account: {
     id: 'other_id',
