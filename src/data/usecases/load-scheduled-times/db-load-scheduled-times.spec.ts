@@ -29,4 +29,13 @@ describe('DbLoadScheduledTimes usecase', () => {
     const scheduledTimes = await sut.loadAll()
     expect(scheduledTimes).toEqual(mockScheduledTimes())
   })
+
+  test('Should throw if LoadScheduledTimesRepository throws', async () => {
+    const { sut, loadScheduledTimesRepositoryStub } = makeSut()
+    jest.spyOn(loadScheduledTimesRepositoryStub, 'loadAll').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.loadAll()
+    await expect(promise).rejects.toThrow()
+  })
 })
