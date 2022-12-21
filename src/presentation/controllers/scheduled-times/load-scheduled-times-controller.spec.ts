@@ -1,6 +1,6 @@
 import { mockScheduledTimes } from '../../../domain/tests/scheduled-times/mock-scheduled-times'
 import { LoadScheduledTimes } from '../../../domain/usecases/load-scheduled-times'
-import { ok } from '../../helpers/http/http-helper'
+import { ok, serverError } from '../../helpers/http/http-helper'
 import { LoadScheduledTimesStub } from '../../tests/scheduled-times/mock-load-scheduled-times'
 import { LoadScheduledTimesController } from './load-scheduled-times-controller'
 
@@ -30,5 +30,14 @@ describe('LoadScheduledTimesController', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(ok(mockScheduledTimes()))
+  })
+
+  test('Should return 500 if LoadScheduledTimes throws', async () => {
+    const { sut, loadScheduledTimesStub } = makeSut()
+    jest.spyOn(loadScheduledTimesStub, 'loadAll').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
