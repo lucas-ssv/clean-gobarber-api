@@ -1,6 +1,7 @@
 import { DbLoadScheduledTimes } from './db-load-scheduled-times'
-import { LoadScheduledTimesRepositoryStub, mockScheduledTimes } from '../../tests/db/mock-load-scheduled-times-repository'
+import { LoadScheduledTimesRepositoryStub } from '../../tests/db/mock-load-scheduled-times-repository'
 import { LoadScheduledTimesRepository } from '../../protocols/db/load-scheduled-times-repository'
+import { mockScheduledTimes } from '../../../domain/tests/scheduled-times/mock-scheduled-times'
 
 type SutTypes = {
   sut: DbLoadScheduledTimes

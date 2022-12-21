@@ -1,8 +1,8 @@
 import { ScheduledTimeResult } from '../../../domain/models/scheduled-time-result'
 import { mockScheduledTimes } from '../../../domain/tests/scheduled-times/mock-scheduled-times'
-import { LoadScheduledTimesRepository } from '../../protocols/db/load-scheduled-times-repository'
+import { LoadScheduledTimes } from '../../../domain/usecases/load-scheduled-times'
 
-export class LoadScheduledTimesRepositoryStub implements LoadScheduledTimesRepository {
+export class LoadScheduledTimesStub implements LoadScheduledTimes {
   async loadAll (): Promise<ScheduledTimeResult[]> {
     return mockScheduledTimes()
   }
