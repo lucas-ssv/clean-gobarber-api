@@ -52,4 +52,13 @@ describe('DbUpdateAccount usecase', () => {
     await sut.update(mockUpdateAccountParams())
     expect(compareSpy).toHaveBeenCalledWith(mockUpdateAccountParams().currentPassword, 'hashed_password')
   })
+
+  test('Should throw if Compare throws', async () => {
+    const { sut, compareStub } = makeSut()
+    jest.spyOn(compareStub, 'compare').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.update(mockUpdateAccountParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
