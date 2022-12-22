@@ -3,13 +3,16 @@ import { mockAccount } from '../../../domain/tests/account/mock-account'
 import { mockUpdateAccountParams } from '../../../domain/tests/account/mock-update-account'
 import { Compare } from '../../protocols/criptography/compare'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
+import { UpdateAccountRepository } from '../../protocols/db/update-account-repository'
 import { CompareStub } from '../../tests/criptography/mock-compare'
+import { UpdateAccountRepositoryStub } from '../../tests/db/mock-update-account-repository'
 import { DbUpdateAccount } from './db-update-account'
 
 type SutTypes = {
   sut: DbUpdateAccount
   loadByEmailRepositoryStub: LoadByEmailRepository<Account>
   compareStub: Compare
+  updateAccountRepositoryStub: UpdateAccountRepository
 }
 
 class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
@@ -21,11 +24,13 @@ class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
 const makeSut = (): SutTypes => {
   const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
   const compareStub = new CompareStub()
-  const sut = new DbUpdateAccount(loadByEmailRepositoryStub, compareStub)
+  const updateAccountRepositoryStub = new UpdateAccountRepositoryStub()
+  const sut = new DbUpdateAccount(loadByEmailRepositoryStub, compareStub, updateAccountRepositoryStub)
   return {
     sut,
     loadByEmailRepositoryStub,
-    compareStub
+    compareStub,
+    updateAccountRepositoryStub
   }
 }
 
@@ -60,5 +65,18 @@ describe('DbUpdateAccount usecase', () => {
     })
     const promise = sut.update(mockUpdateAccountParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call UpdateAccountRepository with correct values', async () => {
+    const { sut, updateAccountRepositoryStub } = makeSut()
+    const updateSpy = jest.spyOn(updateAccountRepositoryStub, 'update')
+    const mockUpdateAccount = mockUpdateAccountParams()
+    await sut.update(mockUpdateAccount)
+    expect(updateSpy).toHaveBeenCalledWith({
+      name: mockUpdateAccount.name,
+      currentPassword: mockUpdateAccount.currentPassword,
+      newPassword: mockUpdateAccount.newPassword,
+      newPasswordConfirmation: mockUpdateAccount.newPasswordConfirmation
+    })
   })
 })
