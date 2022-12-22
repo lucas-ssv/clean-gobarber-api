@@ -31,4 +31,13 @@ describe('DbUpdateAccount usecase', () => {
     await sut.update(mockUpdateAccountParams())
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
+
+  test('Should throw if LoadByEmailRepository throws', async () => {
+    const { sut, loadByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.update(mockUpdateAccountParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
