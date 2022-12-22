@@ -1,7 +1,13 @@
 import { Account } from '../../../domain/models/account'
 import { mockAccount } from '../../../domain/tests/account/mock-account'
+import { mockUpdateAccountParams } from '../../../domain/tests/account/mock-update-account'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { DbUpdateAccount } from './db-update-account'
+
+type SutTypes = {
+  sut: DbUpdateAccount
+  loadByEmailRepositoryStub: LoadByEmailRepository<Account>
+}
 
 class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
   async loadByEmail (email: string): Promise<Account> {
@@ -9,18 +15,20 @@ class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
   }
 }
 
+const makeSut = (): SutTypes => {
+  const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
+  const sut = new DbUpdateAccount(loadByEmailRepositoryStub)
+  return {
+    sut,
+    loadByEmailRepositoryStub
+  }
+}
+
 describe('DbUpdateAccount usecase', () => {
   test('Should call LoadByEmailRepository with correct value', async () => {
-    const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
+    const { sut, loadByEmailRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail')
-    const sut = new DbUpdateAccount(loadByEmailRepositoryStub)
-    await sut.update({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      currentPassword: 'any_current_password',
-      newPassword: 'any_new_password',
-      newPasswordConfirmation: 'any_new_password'
-    })
+    await sut.update(mockUpdateAccountParams())
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
