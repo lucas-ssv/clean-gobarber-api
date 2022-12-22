@@ -79,4 +79,13 @@ describe('DbUpdateAccount usecase', () => {
       newPasswordConfirmation: mockUpdateAccount.newPasswordConfirmation
     })
   })
+
+  test('Should throw if UpdateAccountRepository throws', async () => {
+    const { sut, updateAccountRepositoryStub } = makeSut()
+    jest.spyOn(updateAccountRepositoryStub, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.update(mockUpdateAccountParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
