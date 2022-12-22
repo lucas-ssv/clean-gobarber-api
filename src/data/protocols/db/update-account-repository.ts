@@ -5,5 +5,5 @@ export interface UpdateAccountRepository {
 }
 
 export namespace UpdateAccountRepository {
-  export type Params = UpdateAccount.Params
+  export type Params = Omit<UpdateAccount.Params, 'email'>
 }
