@@ -16,12 +16,13 @@ export class DbUpdateAccount implements UpdateAccount {
     if (account) {
       const isPasswordMatch = await this.compare.compare(params.currentPassword, account.password)
       if (isPasswordMatch) {
-        await this.updateAccountRepository.update({
+        const account = await this.updateAccountRepository.update({
           name: params.name,
           currentPassword: params.currentPassword,
           newPassword: params.newPassword,
           newPasswordConfirmation: params.newPasswordConfirmation
         })
+        return account
       }
     }
     return null as any
