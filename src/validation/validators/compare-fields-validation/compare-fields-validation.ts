@@ -8,6 +8,9 @@ export class CompareFieldsValidation implements Validation {
   ) {}
 
   validate (input: object): Error {
-    return new CompareFieldsError(this.fieldName, this.fieldNameToCompare)
+    if (input[this.fieldName] !== input[this.fieldNameToCompare]) {
+      return new CompareFieldsError(this.fieldName, this.fieldNameToCompare)
+    }
+    return null as any
   }
 }
