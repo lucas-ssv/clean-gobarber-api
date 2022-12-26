@@ -11,7 +11,7 @@ export class DbUpdateAccount implements UpdateAccount {
     private readonly updateAccountRepository: UpdateAccountRepository
   ) {}
 
-  async update (params: UpdateAccount.Params): Promise<void> {
+  async update (params: UpdateAccount.Params): Promise<UpdateAccount.Result> {
     const account = await this.loadByEmailRepository.loadByEmail(params.email)
     if (account) {
       const isPasswordMatch = await this.compare.compare(params.currentPassword, account.password)
@@ -24,5 +24,6 @@ export class DbUpdateAccount implements UpdateAccount {
         })
       }
     }
+    return null as any
   }
 }

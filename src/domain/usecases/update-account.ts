@@ -1,5 +1,7 @@
+import { Account } from '../models/account'
+
 export interface UpdateAccount {
-  update: (params: UpdateAccount.Params) => Promise<void>
+  update: (params: UpdateAccount.Params) => Promise<UpdateAccount.Result>
 }
 
 export namespace UpdateAccount {
@@ -10,4 +12,6 @@ export namespace UpdateAccount {
     newPassword: string
     newPasswordConfirmation: string
   }
+
+  export type Result = Account
 }
