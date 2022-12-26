@@ -81,6 +81,7 @@ describe('DbUpdateAccount usecase', () => {
     await sut.update(mockUpdateAccount)
     expect(updateSpy).toHaveBeenCalledWith({
       name: mockUpdateAccount.name,
+      email: mockUpdateAccount.email,
       currentPassword: mockUpdateAccount.currentPassword,
       newPassword: mockUpdateAccount.newPassword,
       newPasswordConfirmation: mockUpdateAccount.newPasswordConfirmation

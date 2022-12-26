@@ -51,4 +51,22 @@ describe('AccountRepository', () => {
       expect(accountByEmail).toBeNull()
     })
   })
+
+  describe('update()', () => {
+    test('Should update an account on success', async () => {
+      const sut = new AccountRepository()
+      await client.account.create({
+        data: {
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password'
+        }
+      })
+      const account = await sut.update({
+        name: 'updated_name',
+        email: 'any_email@mail.com'
+      })
+      expect(account.name).toBe('updated_name')
+    })
+  })
 })
