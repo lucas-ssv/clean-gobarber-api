@@ -1,20 +1,24 @@
 import { UpdateAccountController } from './update-account-controller'
+import { UpdateAccount } from '../../../../domain/usecases/update-account'
 import { ValidationStub } from '../../../tests/mock-validation'
-import { mockHttpRequestUpdate } from '../../../tests/account/mock-update-account'
+import { mockHttpRequestUpdate, UpdateAccountStub } from '../../../tests/account/mock-update-account'
 import { Validation } from '../../../protocols/validation'
 import { badRequest } from '../../../helpers/http/http-helper'
 
 type SutTypes = {
   sut: UpdateAccountController
   validationStub: Validation
+  updateAccountStub: UpdateAccount
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub()
-  const sut = new UpdateAccountController(validationStub)
+  const updateAccountStub = new UpdateAccountStub()
+  const sut = new UpdateAccountController(validationStub, updateAccountStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    updateAccountStub
   }
 }
 
@@ -31,5 +35,12 @@ describe('UpdateAccountController', () => {
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockHttpRequestUpdate())
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
+  test('Should call UpdateAccount with correct values', async () => {
+    const { sut, updateAccountStub } = makeSut()
+    const updateSpy = jest.spyOn(updateAccountStub, 'update')
+    await sut.handle(mockHttpRequestUpdate())
+    expect(updateSpy).toHaveBeenCalledWith(mockHttpRequestUpdate().body)
   })
 })

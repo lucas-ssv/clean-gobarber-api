@@ -1,3 +1,6 @@
+import { Account } from '../../../domain/models/account'
+import { mockUpdateAccountResult } from '../../../domain/tests/account/mock-update-account'
+import { UpdateAccount } from '../../../domain/usecases/update-account'
 import { HttpRequest } from '../../protocols/http'
 
 export const mockHttpRequestUpdate = (): HttpRequest => ({
@@ -9,3 +12,9 @@ export const mockHttpRequestUpdate = (): HttpRequest => ({
     newPasswordConfirmation: 'any_new_password'
   }
 })
+
+export class UpdateAccountStub implements UpdateAccount {
+  async update (params: UpdateAccount.Params): Promise<Account> {
+    return mockUpdateAccountResult()
+  }
+}
