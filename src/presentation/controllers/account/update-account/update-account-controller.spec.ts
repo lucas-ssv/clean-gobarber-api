@@ -3,7 +3,8 @@ import { UpdateAccount } from '../../../../domain/usecases/update-account'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { mockHttpRequestUpdate, UpdateAccountStub } from '../../../tests/account/mock-update-account'
 import { Validation } from '../../../protocols/validation'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, ok } from '../../../helpers/http/http-helper'
+import { mockUpdateAccountResult } from '../../../../domain/tests/account/mock-update-account'
 
 type SutTypes = {
   sut: UpdateAccountController
@@ -42,5 +43,11 @@ describe('UpdateAccountController', () => {
     const updateSpy = jest.spyOn(updateAccountStub, 'update')
     await sut.handle(mockHttpRequestUpdate())
     expect(updateSpy).toHaveBeenCalledWith(mockHttpRequestUpdate().body)
+  })
+
+  test('Should return 200 if account was updated on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockHttpRequestUpdate())
+    expect(httpResponse).toEqual(ok(mockUpdateAccountResult()))
   })
 })
