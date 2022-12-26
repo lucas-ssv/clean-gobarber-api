@@ -9,4 +9,10 @@ describe('CompareFieldsValidation', () => {
     const error = sut.validate({ [fieldName]: 'any_value', [fieldNameToCompare]: 'other_value' })
     expect(error).toEqual(new CompareFieldsError(fieldName, fieldNameToCompare))
   })
+  
+  test('Should return null if comparation fields succeeds', () => {
+    const sut = new CompareFieldsValidation('field', 'fieldToCompare')
+    const error = sut.validate({ field: 'any_field', fieldToCompare: 'any_field' })
+    expect(error).toBeNull()
+  })
 })
