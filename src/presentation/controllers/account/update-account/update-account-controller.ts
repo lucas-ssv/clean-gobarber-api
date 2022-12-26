@@ -1,5 +1,5 @@
 import { UpdateAccount } from '../../../../domain/usecases/update-account'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, ok } from '../../../helpers/http/http-helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -16,7 +16,7 @@ export class UpdateAccountController implements Controller {
     if (error) {
       return badRequest(error)
     }
-    await this.updateAccount.update(request)
-    return null as any
+    const account = await this.updateAccount.update(request)
+    return ok(account)
   }
 }
