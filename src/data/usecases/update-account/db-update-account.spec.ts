@@ -42,6 +42,13 @@ describe('DbUpdateAccount usecase', () => {
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
+  test('Should return null if no account was found', async () => {
+    const { sut, loadByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null) as any)
+    const account = await sut.update(mockUpdateAccountParams())
+    expect(account).toBeNull()
+  })
+
   test('Should throw if LoadByEmailRepository throws', async () => {
     const { sut, loadByEmailRepositoryStub } = makeSut()
     jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockImplementationOnce(() => {
