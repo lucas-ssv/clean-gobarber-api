@@ -87,6 +87,18 @@ describe('DbUpdateAccount usecase', () => {
     })
   })
 
+  test('Should return an updated account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.update(mockUpdateAccountParams())
+    expect(account).toEqual({
+      id: 'any_id',
+      name: 'updated_name',
+      email: 'any_email@mail.com',
+      password: 'updated_password',
+      isBarber: false
+    })
+  })
+
   test('Should throw if UpdateAccountRepository throws', async () => {
     const { sut, updateAccountRepositoryStub } = makeSut()
     jest.spyOn(updateAccountRepositoryStub, 'update').mockImplementationOnce(() => {
