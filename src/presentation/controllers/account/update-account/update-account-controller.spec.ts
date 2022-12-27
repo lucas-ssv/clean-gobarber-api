@@ -3,8 +3,9 @@ import { UpdateAccount } from '../../../../domain/usecases/update-account'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { mockHttpRequestUpdate, UpdateAccountStub } from '../../../tests/account/mock-update-account'
 import { Validation } from '../../../protocols/validation'
-import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { mockUpdateAccountResult } from '../../../../domain/tests/account/mock-update-account'
+import { InvalidAccountError } from '../../../errors/invalid-account-error'
 
 type SutTypes = {
   sut: UpdateAccountController
@@ -43,6 +44,13 @@ describe('UpdateAccountController', () => {
     const updateSpy = jest.spyOn(updateAccountStub, 'update')
     await sut.handle(mockHttpRequestUpdate())
     expect(updateSpy).toHaveBeenCalledWith(mockHttpRequestUpdate().body)
+  })
+
+  test('Should return 404 if account does not exists', async () => {
+    const { sut, updateAccountStub } = makeSut()
+    jest.spyOn(updateAccountStub, 'update').mockReturnValueOnce(Promise.resolve(null) as any)
+    const httpResponse = await sut.handle(mockHttpRequestUpdate())
+    expect(httpResponse).toEqual(notFound(new InvalidAccountError()))
   })
 
   test('Should return 200 if account was updated on success', async () => {
