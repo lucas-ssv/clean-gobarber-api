@@ -88,6 +88,28 @@ describe('DbUpdateAccount usecase', () => {
     })
   })
 
+  test('Should not update account password if current password is not provided', async () => {
+    const { sut, updateAccountRepositoryStub } = makeSut()
+    jest.spyOn(updateAccountRepositoryStub, 'update').mockReturnValueOnce(Promise.resolve({
+      id: 'any_id',
+      name: 'updated_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      isBarber: false
+    }))
+    const account = await sut.update({
+      name: 'updated_name',
+      email: 'any_email@mail.com'
+    })
+    expect(account).toEqual({
+      id: 'any_id',
+      name: 'updated_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      isBarber: false
+    })
+  })
+
   test('Should return an updated account on success', async () => {
     const { sut } = makeSut()
     const account = await sut.update(mockUpdateAccountParams())
