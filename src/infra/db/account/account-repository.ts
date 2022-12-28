@@ -32,15 +32,19 @@ export class AccountRepository implements AddAccountRepository, LoadByEmailRepos
       where: {
         email: params.email
       },
+      include: {
+        avatar: true
+      },
       data: {
         name: params.name,
-        password: params.newPassword,
+        password: params.newPassword
       }
     })
-    const { is_barber: isBarber, ...rest } = account
+    console.log(account)
+    const { is_barber: isBarber, avatar_id, ...rest } = account
     return {
       ...rest,
       isBarber
-    }
+    } as any
   }
 }

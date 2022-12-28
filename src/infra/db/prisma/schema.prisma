@@ -13,9 +13,20 @@ model Account {
   email          String           @unique
   password       String
   is_barber      Boolean          @default(false)
+  avatar         Avatar?          @relation(fields: [avatar_id], references: [id])
+  avatar_id      String?
   ScheduledTimes ScheduledTimes[]
 
   @@map("accounts")
+}
+
+model Avatar {
+  id      String    @id @default(uuid())
+  name    String
+  url     String
+  Account Account[]
+
+  @@map("avatars")
 }
 
 model ScheduledTimes {

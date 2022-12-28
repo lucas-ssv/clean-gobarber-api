@@ -64,9 +64,11 @@ describe('AccountRepository', () => {
       })
       const account = await sut.update({
         name: 'updated_name',
-        email: 'any_email@mail.com'
+        email: 'any_email@mail.com',
+        newPassword: 'updated_new_password'
       })
       expect(account.name).toBe('updated_name')
+      expect(account.password).toBe('updated_new_password')
     })
   })
 })
