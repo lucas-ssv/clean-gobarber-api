@@ -40,7 +40,6 @@ export class AccountRepository implements AddAccountRepository, LoadByEmailRepos
         password: params.newPassword
       }
     })
-    console.log(account)
     const { is_barber: isBarber, avatar_id, ...rest } = account
     return {
       ...rest,

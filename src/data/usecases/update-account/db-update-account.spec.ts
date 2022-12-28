@@ -104,8 +104,7 @@ describe('DbUpdateAccount usecase', () => {
       name: mockUpdateAccount.name,
       email: mockUpdateAccount.email,
       currentPassword: mockUpdateAccount.currentPassword,
-      newPassword: mockUpdateAccount.newPassword,
-      newPasswordConfirmation: mockUpdateAccount.newPasswordConfirmation
+      newPassword: 'hashed_password'
     })
   })
 

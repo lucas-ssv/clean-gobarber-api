@@ -10,7 +10,6 @@ export namespace UpdateAccount {
     email: string
     currentPassword?: string
     newPassword?: string
-    newPasswordConfirmation?: string
   }
 
   export type Result = Account

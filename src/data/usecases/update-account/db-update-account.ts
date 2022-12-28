@@ -22,13 +22,12 @@ export class DbUpdateAccount implements UpdateAccount {
       } else {
         const isPasswordMatch = await this.compare.compare(params.currentPassword, account.password)
         if (isPasswordMatch) {
-          await this.encrypter.encrypt(params.newPassword as string)
+          const hashedPassword = await this.encrypter.encrypt(params.newPassword as string)
           const account = await this.updateAccountRepository.update({
             name: params.name,
             email: params.email,
             currentPassword: params.currentPassword,
-            newPassword: params.newPassword,
-            newPasswordConfirmation: params.newPasswordConfirmation
+            newPassword: hashedPassword
           })
           return account
         }
