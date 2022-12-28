@@ -86,6 +86,15 @@ describe('DbUpdateAccount usecase', () => {
     expect(encrypterSpy).toHaveBeenCalledWith(mockUpdateAccountParams().newPassword)
   })
 
+  test('Should throw if Encrypter throws', async () => {
+    const { sut, encrypterStub } = makeSut()
+    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.update(mockUpdateAccountParams())
+    await expect(promise).rejects.toThrow()
+  })
+
   test('Should call UpdateAccountRepository with correct values', async () => {
     const { sut, updateAccountRepositoryStub } = makeSut()
     const updateSpy = jest.spyOn(updateAccountRepositoryStub, 'update')
