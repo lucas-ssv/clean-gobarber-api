@@ -13,12 +13,12 @@ export class UpdateAccountController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const request = httpRequest.body
-      const error = this.validation.validate(request)
+      const { email } = httpRequest.body
+      const error = this.validation.validate({ email })
       if (error) {
         return badRequest(error)
       }
-      const account = await this.updateAccount.update(request)
+      const account = await this.updateAccount.update(httpRequest.body)
       if (!account) {
         return notFound(new InvalidAccountError())
       }

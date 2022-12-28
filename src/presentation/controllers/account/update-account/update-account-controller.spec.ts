@@ -29,7 +29,7 @@ describe('UpdateAccountController', () => {
     const { sut, validationStub } = makeSut()
     const validationSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockHttpRequestUpdate())
-    expect(validationSpy).toHaveBeenCalledWith(mockHttpRequestUpdate().body)
+    expect(validationSpy).toHaveBeenCalledWith({ email: mockHttpRequestUpdate().body.email })
   })
 
   test('Should return 400 if any validation fails', async () => {
