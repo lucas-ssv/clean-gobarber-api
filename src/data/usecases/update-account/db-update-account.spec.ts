@@ -2,9 +2,11 @@ import { Account } from '../../../domain/models/account'
 import { mockAccount } from '../../../domain/tests/account/mock-account'
 import { mockUpdateAccountParams } from '../../../domain/tests/account/mock-update-account'
 import { Compare } from '../../protocols/criptography/compare'
+import { Encrypter } from '../../protocols/criptography/encrypter'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
 import { UpdateAccountRepository } from '../../protocols/db/update-account-repository'
 import { CompareStub } from '../../tests/criptography/mock-compare'
+import { EncrypterStub } from '../../tests/criptography/mock-encrypter'
 import { UpdateAccountRepositoryStub } from '../../tests/db/mock-update-account-repository'
 import { DbUpdateAccount } from './db-update-account'
 
@@ -12,6 +14,7 @@ type SutTypes = {
   sut: DbUpdateAccount
   loadByEmailRepositoryStub: LoadByEmailRepository<Account>
   compareStub: Compare
+  encrypterStub: Encrypter
   updateAccountRepositoryStub: UpdateAccountRepository
 }
 
@@ -24,12 +27,14 @@ class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
 const makeSut = (): SutTypes => {
   const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
   const compareStub = new CompareStub()
+  const encrypterStub = new EncrypterStub()
   const updateAccountRepositoryStub = new UpdateAccountRepositoryStub()
-  const sut = new DbUpdateAccount(loadByEmailRepositoryStub, compareStub, updateAccountRepositoryStub)
+  const sut = new DbUpdateAccount(loadByEmailRepositoryStub, compareStub, encrypterStub, updateAccountRepositoryStub)
   return {
     sut,
     loadByEmailRepositoryStub,
     compareStub,
+    encrypterStub,
     updateAccountRepositoryStub
   }
 }
@@ -72,6 +77,13 @@ describe('DbUpdateAccount usecase', () => {
     })
     const promise = sut.update(mockUpdateAccountParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call Encrypter with correct value', async () => {
+    const { sut, encrypterStub } = makeSut()
+    const encrypterSpy = jest.spyOn(encrypterStub, 'encrypt')
+    await sut.update(mockUpdateAccountParams())
+    expect(encrypterSpy).toHaveBeenCalledWith(mockUpdateAccountParams().newPassword)
   })
 
   test('Should call UpdateAccountRepository with correct values', async () => {
