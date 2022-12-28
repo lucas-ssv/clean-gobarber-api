@@ -14,7 +14,7 @@ export class DbUpdateAccount implements UpdateAccount {
   async update (params: UpdateAccount.Params): Promise<UpdateAccount.Result> {
     const account = await this.loadByEmailRepository.loadByEmail(params.email)
     if (account) {
-      const isPasswordMatch = await this.compare.compare(params.currentPassword, account.password)
+      const isPasswordMatch = await this.compare.compare(params.currentPassword || '', account.password)
       if (isPasswordMatch) {
         const account = await this.updateAccountRepository.update({
           name: params.name,

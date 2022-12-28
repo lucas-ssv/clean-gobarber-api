@@ -6,11 +6,11 @@ export interface UpdateAccount {
 
 export namespace UpdateAccount {
   export type Params = {
-    name: string
+    name?: string
     email: string
-    currentPassword: string
-    newPassword: string
-    newPasswordConfirmation: string
+    currentPassword?: string
+    newPassword?: string
+    newPasswordConfirmation?: string
   }
 
   export type Result = Account
