@@ -17,7 +17,10 @@ export class DbUpdateAccount implements UpdateAccount {
     const account = await this.loadByEmailRepository.loadByEmail(params.email)
     if (account) {
       if (!params.currentPassword) {
-        const account = await this.updateAccountRepository.update(params)
+        const account = await this.updateAccountRepository.update({
+          name: params.name,
+          email: params.email
+        })
         return account
       } else {
         const isPasswordMatch = await this.compare.compare(params.currentPassword, account.password)

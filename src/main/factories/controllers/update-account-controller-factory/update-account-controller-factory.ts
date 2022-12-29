@@ -19,7 +19,8 @@ export const makeUpdateAccountController = (): Controller => {
   }
   validations.push(new CompareFieldsValidation('newPassword', 'newPasswordConfirmation'))
   const accountRepository = new AccountRepository()
+  const encrypter = new BcryptAdapter()
   const compare = new BcryptAdapter()
-  const updateAccount = new DbUpdateAccount(accountRepository, compare, accountRepository)
+  const updateAccount = new DbUpdateAccount(accountRepository, compare, encrypter, accountRepository)
   return new UpdateAccountController(new ValidationComposite(validations), updateAccount)
 }

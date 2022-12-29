@@ -1,5 +1,8 @@
 import { UpdateAccount } from '../../../../domain/usecases/update-account'
+import { CompareFieldsError } from '../../../errors/compare-fields-error'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
+import { MinLengthFieldError } from '../../../errors/min-length-field-error'
+import { RequiredFieldError } from '../../../errors/required-field-error'
 import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
@@ -13,12 +16,22 @@ export class UpdateAccountController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const { email } = httpRequest.body
-      const error = this.validation.validate({ email })
-      if (error) {
+      const request = httpRequest.body
+      const error = this.validation.validate(request)
+      if (error instanceof RequiredFieldError) {
         return badRequest(error)
       }
-      const account = await this.updateAccount.update(httpRequest.body)
+      if (request.currentPassword) {
+        if (error instanceof MinLengthFieldError) {
+          return badRequest(error)
+        }
+      }
+      if (request.newPassword) {
+        if (error instanceof CompareFieldsError || error instanceof MinLengthFieldError) {
+          return badRequest(error)
+        }
+      }
+      const account = await this.updateAccount.update(request)
       if (!account) {
         return notFound(new InvalidAccountError())
       }
