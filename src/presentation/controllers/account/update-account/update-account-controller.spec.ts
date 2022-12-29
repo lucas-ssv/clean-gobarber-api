@@ -53,6 +53,18 @@ describe('UpdateAccountController', () => {
     expect(httpResponse).toEqual(badRequest(new MinLengthFieldError('currentPassword', 6)))
   })
 
+  test('Should return 400 if newPassword is provided but the validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MinLengthFieldError('newPassword', 6))
+    const httpResponse = await sut.handle({
+      body: {
+        email: 'any_email@mail.com',
+        newPassword: '123'
+      }
+    })
+    expect(httpResponse).toEqual(badRequest(new MinLengthFieldError('newPassword', 6)))
+  })
+
   test('Should call UpdateAccount with correct values', async () => {
     const { sut, updateAccountStub } = makeSut()
     const updateSpy = jest.spyOn(updateAccountStub, 'update')
