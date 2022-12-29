@@ -6,6 +6,8 @@ import { Validation } from '../../../protocols/validation'
 import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { mockUpdateAccountResult } from '../../../../domain/tests/account/mock-update-account'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
+import { RequiredFieldError } from '../../../errors/required-field-error'
+import { MinLengthFieldError } from '../../../errors/min-length-field-error'
 
 type SutTypes = {
   sut: UpdateAccountController
@@ -29,14 +31,26 @@ describe('UpdateAccountController', () => {
     const { sut, validationStub } = makeSut()
     const validationSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockHttpRequestUpdate())
-    expect(validationSpy).toHaveBeenCalledWith({ email: mockHttpRequestUpdate().body.email })
+    expect(validationSpy).toHaveBeenCalledWith(mockHttpRequestUpdate().body)
   })
 
   test('Should return 400 if any validation fails', async () => {
     const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new RequiredFieldError('any_field'))
     const httpResponse = await sut.handle(mockHttpRequestUpdate())
-    expect(httpResponse).toEqual(badRequest(new Error()))
+    expect(httpResponse).toEqual(badRequest(new RequiredFieldError('any_field')))
+  })
+
+  test('Should return 400 if currentPassword is provided but the validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MinLengthFieldError('currentPassword', 6))
+    const httpResponse = await sut.handle({
+      body: {
+        email: 'any_email@mail.com',
+        currentPassword: '123'
+      }
+    })
+    expect(httpResponse).toEqual(badRequest(new MinLengthFieldError('currentPassword', 6)))
   })
 
   test('Should call UpdateAccount with correct values', async () => {
