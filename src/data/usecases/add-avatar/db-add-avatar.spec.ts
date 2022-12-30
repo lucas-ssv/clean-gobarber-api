@@ -37,6 +37,13 @@ describe('DbAddAvatar usecase', () => {
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
+  test('Should return null if no account was found', async () => {
+    const { sut, loadByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null) as any)
+    const avatar = await sut.add(mockAddAvatarParams())
+    expect(avatar).toBeNull()
+  })
+
   test('Should throw if LoadByEmailRepository throws', async () => {
     const { sut, loadByEmailRepositoryStub } = makeSut()
     jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail').mockImplementationOnce(() => {
