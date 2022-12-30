@@ -37,7 +37,8 @@ export class AccountRepository implements AddAccountRepository, LoadByEmailRepos
       },
       data: {
         name: params.name,
-        password: params.newPassword
+        password: params.newPassword,
+        avatar_id: params.avatarId
       }
     })
     const { is_barber: isBarber, avatar_id, ...rest } = account
