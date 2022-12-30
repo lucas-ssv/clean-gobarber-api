@@ -63,4 +63,13 @@ describe('DbAddAvatar usecase', () => {
       url: mockAvatar.url
     })
   })
+
+  test('Should throw if AddAvatarRepository throws', async () => {
+    const { sut, addAvatarRepositoryStub } = makeSut()
+    jest.spyOn(addAvatarRepositoryStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockAddAvatarParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
