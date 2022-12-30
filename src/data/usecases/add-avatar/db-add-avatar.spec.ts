@@ -2,6 +2,12 @@ import { DbAddAvatar } from './db-add-avatar'
 import { Account } from '../../../domain/models/account'
 import { mockAccount } from '../../../domain/tests/account/mock-account'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
+import { mockAddAvatarParams } from '../../../domain/tests/avatar/mock-avatar'
+
+type SutTypes = {
+  sut: DbAddAvatar
+  loadByEmailRepositoryStub: LoadByEmailRepository<Account>
+}
 
 class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
   async loadByEmail (email: string): Promise<Account> {
@@ -9,16 +15,20 @@ class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
   }
 }
 
+const makeSut = (): SutTypes => {
+  const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
+  const sut = new DbAddAvatar(loadByEmailRepositoryStub)
+  return {
+    sut,
+    loadByEmailRepositoryStub
+  }
+}
+
 describe('DbAddAvatar usecase', () => {
   test('Should call LoadByEmailRepository with correct value', async () => {
-    const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
+    const { sut, loadByEmailRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadByEmailRepositoryStub, 'loadByEmail')
-    const sut = new DbAddAvatar(loadByEmailRepositoryStub)
-    await sut.add({
-      email: 'any_email@mail.com',
-      name: 'any_name',
-      url: 'any_url'
-    })
+    await sut.add(mockAddAvatarParams())
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
