@@ -89,6 +89,15 @@ describe('DbAddAvatar usecase', () => {
     })
   })
 
+  test('Should throw if UpdateAccountRepository throws', async () => {
+    const { sut, updateAccountRepositoryStub } = makeSut()
+    jest.spyOn(updateAccountRepositoryStub, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockAddAvatarParams())
+    await expect(promise).rejects.toThrow()
+  })
+
   test('Should return an avatar on success', async () => {
     const { sut } = makeSut()
     const avatar = await sut.add(mockAddAvatarParams())
