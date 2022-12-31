@@ -13,10 +13,11 @@ export class DbAddAvatar implements AddAvatar {
   async add (params: AddAvatar.Params): Promise<Avatar> {
     const account = await this.loadByEmailRepository.loadByEmail(params.email)
     if (account) {
-      await this.addAvatarRepository.add({
+      const avatar = await this.addAvatarRepository.add({
         name: params.name,
         url: params.url
       })
+      return avatar
     }
     return null as any
   }
