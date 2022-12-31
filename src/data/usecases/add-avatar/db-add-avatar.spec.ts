@@ -5,11 +5,14 @@ import { LoadByEmailRepository } from '../../protocols/db/load-by-email-reposito
 import { mockAddAvatarParams, mockAddAvatarResult } from '../../../domain/tests/avatar/mock-avatar'
 import { AddAvatarRepositoryStub } from '../../tests/db/mock-add-avatar-repository'
 import { AddAvatarRepository } from '../../protocols/db/add-avatar-repository'
+import { UpdateAccountRepositoryStub } from '../../tests/db/mock-update-account-repository'
+import { UpdateAccountRepository } from '../../protocols/db/update-account-repository'
 
 type SutTypes = {
   sut: DbAddAvatar
   loadByEmailRepositoryStub: LoadByEmailRepository<Account>
   addAvatarRepositoryStub: AddAvatarRepository
+  updateAccountRepositoryStub: UpdateAccountRepository
 }
 
 class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
@@ -21,11 +24,13 @@ class LoadByEmailRepositoryStub implements LoadByEmailRepository<Account> {
 const makeSut = (): SutTypes => {
   const loadByEmailRepositoryStub = new LoadByEmailRepositoryStub()
   const addAvatarRepositoryStub = new AddAvatarRepositoryStub()
-  const sut = new DbAddAvatar(loadByEmailRepositoryStub, addAvatarRepositoryStub)
+  const updateAccountRepositoryStub = new UpdateAccountRepositoryStub()
+  const sut = new DbAddAvatar(loadByEmailRepositoryStub, addAvatarRepositoryStub, updateAccountRepositoryStub)
   return {
     sut,
     loadByEmailRepositoryStub,
-    addAvatarRepositoryStub
+    addAvatarRepositoryStub,
+    updateAccountRepositoryStub
   }
 }
 
@@ -64,12 +69,6 @@ describe('DbAddAvatar usecase', () => {
     })
   })
 
-  test('Should return an avatar on success', async () => {
-    const { sut } = makeSut()
-    const avatar = await sut.add(mockAddAvatarParams())
-    expect(avatar).toEqual(mockAddAvatarResult())
-  })
-
   test('Should throw if AddAvatarRepository throws', async () => {
     const { sut, addAvatarRepositoryStub } = makeSut()
     jest.spyOn(addAvatarRepositoryStub, 'add').mockImplementationOnce(() => {
@@ -77,5 +76,22 @@ describe('DbAddAvatar usecase', () => {
     })
     const promise = sut.add(mockAddAvatarParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call UpdateAccountRepository with correct values', async () => {
+    const mockAvatarParams = mockAddAvatarParams()
+    const { sut, updateAccountRepositoryStub } = makeSut()
+    const updateSpy = jest.spyOn(updateAccountRepositoryStub, 'update')
+    await sut.add(mockAvatarParams)
+    expect(updateSpy).toHaveBeenCalledWith({
+      email: mockAvatarParams.email,
+      avatarId: 'any_avatar_id'
+    })
+  })
+
+  test('Should return an avatar on success', async () => {
+    const { sut } = makeSut()
+    const avatar = await sut.add(mockAddAvatarParams())
+    expect(avatar).toEqual(mockAddAvatarResult())
   })
 })

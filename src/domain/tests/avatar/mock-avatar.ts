@@ -8,7 +8,7 @@ export const mockAddAvatarParams = (): AddAvatar.Params => ({
 })
 
 export const mockAddAvatarResult = (): Avatar => ({
-  id: 'any_id',
+  id: 'any_avatar_id',
   name: 'any_name',
   url: 'any_url'
 })
