@@ -2,7 +2,7 @@ import { DbAddAvatar } from './db-add-avatar'
 import { Account } from '../../../domain/models/account'
 import { mockAccount } from '../../../domain/tests/account/mock-account'
 import { LoadByEmailRepository } from '../../protocols/db/load-by-email-repository'
-import { mockAddAvatarParams } from '../../../domain/tests/avatar/mock-avatar'
+import { mockAddAvatarParams, mockAddAvatarResult } from '../../../domain/tests/avatar/mock-avatar'
 import { AddAvatarRepositoryStub } from '../../tests/db/mock-add-avatar-repository'
 import { AddAvatarRepository } from '../../protocols/db/add-avatar-repository'
 
@@ -62,6 +62,12 @@ describe('DbAddAvatar usecase', () => {
       name: mockAvatar.name,
       url: mockAvatar.url
     })
+  })
+
+  test('Should return an avatar on success', async () => {
+    const { sut } = makeSut()
+    const avatar = await sut.add(mockAddAvatarParams())
+    expect(avatar).toEqual(mockAddAvatarResult())
   })
 
   test('Should throw if AddAvatarRepository throws', async () => {
