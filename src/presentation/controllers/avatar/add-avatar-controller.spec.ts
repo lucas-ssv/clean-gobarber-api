@@ -1,6 +1,6 @@
 import { mockAddAvatarResult } from '../../../domain/tests/avatar/mock-avatar'
 import { AddAvatar } from '../../../domain/usecases/add-avatar'
-import { badRequest, ok } from '../../helpers/http/http-helper'
+import { badRequest, ok, serverError } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
 import { AddAvatarStub, mockAvatarRequest } from '../../tests/avatar/mock-add-avatar'
 import { ValidationStub } from '../../tests/mock-validation'
@@ -57,5 +57,14 @@ describe('AddAvatarController', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockAvatarRequest())
     expect(httpResponse).toEqual(ok(mockAddAvatarResult()))
+  })
+
+  test('Should return 500 if AddAvatar throws', async () => {
+    const { sut, addAvatarStub } = makeSut()
+    jest.spyOn(addAvatarStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockAvatarRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
