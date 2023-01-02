@@ -1,3 +1,4 @@
+import { badRequest } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
 import { mockAvatarRequest } from '../../tests/avatar/mock-add-avatar'
 import { ValidationStub } from '../../tests/mock-validation'
@@ -26,5 +27,12 @@ describe('AddAvatarController', () => {
       name: 'any_name',
       url: 'any_url'
     })
+  })
+  
+  test('Should return 400 if any validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpResponse = await sut.handle(mockAvatarRequest())
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 })
