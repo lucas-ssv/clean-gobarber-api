@@ -1,5 +1,6 @@
+import { mockAddAvatarResult } from '../../../domain/tests/avatar/mock-avatar'
 import { AddAvatar } from '../../../domain/usecases/add-avatar'
-import { badRequest } from '../../helpers/http/http-helper'
+import { badRequest, ok } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
 import { AddAvatarStub, mockAvatarRequest } from '../../tests/avatar/mock-add-avatar'
 import { ValidationStub } from '../../tests/mock-validation'
@@ -50,5 +51,11 @@ describe('AddAvatarController', () => {
       name: 'any_name',
       url: 'any_url'
     })
+  })
+
+  test('Should return 200 if AddAvatar succeeds', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockAvatarRequest())
+    expect(httpResponse).toEqual(ok(mockAddAvatarResult()))
   })
 })
