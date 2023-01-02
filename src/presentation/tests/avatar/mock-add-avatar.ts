@@ -5,9 +5,11 @@ import { HttpRequest } from '../../protocols/http'
 
 export const mockAvatarRequest = (): HttpRequest => ({
   file: {
+    path: 'any_destination/any_filename.png'
+  },
+  body: {
     email: 'any_email@mail.com',
     name: 'any_name',
-    url: 'any_url'
   }
 })
 

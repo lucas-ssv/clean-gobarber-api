@@ -1,6 +1,7 @@
 import { mockAddAvatarResult } from '../../../domain/tests/avatar/mock-avatar'
 import { AddAvatar } from '../../../domain/usecases/add-avatar'
-import { badRequest, ok, serverError } from '../../helpers/http/http-helper'
+import { InvalidAccountError } from '../../errors/invalid-account-error'
+import { badRequest, notFound, ok, serverError } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
 import { AddAvatarStub, mockAvatarRequest } from '../../tests/avatar/mock-add-avatar'
 import { ValidationStub } from '../../tests/mock-validation'
@@ -31,7 +32,7 @@ describe('AddAvatarController', () => {
     expect(validationSpy).toHaveBeenCalledWith({
       email: 'any_email@mail.com',
       name: 'any_name',
-      url: 'any_url'
+      url: 'any_destination/any_filename.png'
     })
   })
   
@@ -49,8 +50,15 @@ describe('AddAvatarController', () => {
     expect(addSpy).toHaveBeenCalledWith({
       email: 'any_email@mail.com',
       name: 'any_name',
-      url: 'any_url'
+      url: 'any_destination/any_filename.png'
     })
+  })
+
+  test('Should return 404 if no account was found', async () => {
+    const { sut, addAvatarStub } = makeSut()
+    jest.spyOn(addAvatarStub, 'add').mockReturnValueOnce(Promise.resolve(null) as any)
+    const httpResponse = await sut.handle(mockAvatarRequest())
+    expect(httpResponse).toEqual(notFound(new InvalidAccountError()))
   })
 
   test('Should return 200 if AddAvatar succeeds', async () => {
