@@ -1,5 +1,5 @@
 import { AddAvatar } from '../../../domain/usecases/add-avatar'
-import { badRequest } from '../../helpers/http/http-helper'
+import { badRequest, ok } from '../../helpers/http/http-helper'
 import { Controller } from '../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../protocols/http'
 import { Validation } from '../../protocols/validation'
@@ -16,7 +16,7 @@ export class AddAvatarController implements Controller {
     if (error) {
       return badRequest(error)
     }
-    await this.addAvatar.add(request)
-    return await Promise.resolve(null) as any
+    const avatar = await this.addAvatar.add(request)
+    return ok(avatar)
   }
 }
