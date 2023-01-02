@@ -1,5 +1,4 @@
 import multer, { Multer } from 'multer'
-import path from 'path'
 
 export const adaptMulter = (): Multer => {
   return multer({
@@ -10,7 +9,7 @@ export const adaptMulter = (): Multer => {
       },
       filename: (req, file, cb) => {
         const [, extension] = file.mimetype.split('/')
-        const fileName = `${(new Date().getTime() / 1000 | 0)}.${extension}`
+        const fileName = `${Date.now()}.${extension}`
         cb(null, fileName)
       }
     })
