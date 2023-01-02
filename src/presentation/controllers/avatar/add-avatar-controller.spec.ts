@@ -1,20 +1,24 @@
+import { AddAvatar } from '../../../domain/usecases/add-avatar'
 import { badRequest } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
-import { mockAvatarRequest } from '../../tests/avatar/mock-add-avatar'
+import { AddAvatarStub, mockAvatarRequest } from '../../tests/avatar/mock-add-avatar'
 import { ValidationStub } from '../../tests/mock-validation'
 import { AddAvatarController } from './add-avatar-controller'
 
 type SutTypes = {
   sut: AddAvatarController
   validationStub: Validation
+  addAvatarStub: AddAvatar
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub()
-  const sut = new AddAvatarController(validationStub)
+  const addAvatarStub = new AddAvatarStub()
+  const sut = new AddAvatarController(validationStub, addAvatarStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    addAvatarStub
   }
 }
 
@@ -24,6 +28,7 @@ describe('AddAvatarController', () => {
     const validationSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockAvatarRequest())
     expect(validationSpy).toHaveBeenCalledWith({
+      email: 'any_email@mail.com',
       name: 'any_name',
       url: 'any_url'
     })
@@ -34,5 +39,16 @@ describe('AddAvatarController', () => {
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockAvatarRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
+  test('Should call AddAvatar with correct values', async () => {
+    const { sut, addAvatarStub } = makeSut()
+    const addSpy = jest.spyOn(addAvatarStub, 'add')
+    await sut.handle(mockAvatarRequest())
+    expect(addSpy).toHaveBeenCalledWith({
+      email: 'any_email@mail.com',
+      name: 'any_name',
+      url: 'any_url'
+    })
   })
 })
