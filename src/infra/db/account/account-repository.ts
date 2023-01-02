@@ -22,8 +22,12 @@ export class AccountRepository implements AddAccountRepository, LoadByEmailRepos
     const accountByEmail = await client.account.findUnique({
       where: {
         email
+      },
+      include: {
+        avatar: true
       }
     })
+    console.log(accountByEmail)
     return accountByEmail as any
   }
 
