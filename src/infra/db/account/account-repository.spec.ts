@@ -33,16 +33,25 @@ describe('AccountRepository', () => {
     test('Should return an account on loadByEmail success', async () => {
       const mockEmail = 'any_email@mail.com'
       const sut = new AccountRepository()
+      const avatar = await client.avatar.create({
+        data: {
+          name: 'any_name',
+          url: 'any_url'
+        }
+      })
       await client.account.create({
         data: {
           name: 'any_name',
           email: mockEmail,
-          password: 'any_password'
+          password: 'any_password',
+          avatar_id: avatar.id
         }
       })
       const accountByEmail = await sut.loadByEmail(mockEmail)
       expect(accountByEmail).toBeTruthy()
       expect(accountByEmail.email).toBe(mockEmail)
+      expect(accountByEmail.avatar?.name).toBe('any_name')
+      expect(accountByEmail.avatar?.url).toBe('any_url')
     })
 
     test('Should return null if any account found', async () => {
