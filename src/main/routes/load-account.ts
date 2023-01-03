@@ -4,5 +4,5 @@ import { makeLoadAccountController } from '../factories/controllers/load-account
 import { Router } from 'express'
 
 export default (router: Router): void => {
-  router.get('/load-account', auth, adaptRoute(makeLoadAccountController()))
+  router.get('/load-account/:id', auth, adaptRoute(makeLoadAccountController()))
 }
