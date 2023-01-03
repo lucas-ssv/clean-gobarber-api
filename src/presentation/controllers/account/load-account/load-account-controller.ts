@@ -1,7 +1,7 @@
 import { Account } from '../../../../domain/models/account'
 import { LoadByEmail } from '../../../../domain/usecases/load-by-email'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
-import { badRequest, notFound, ok } from '../../../helpers/http/http-helper'
+import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -13,15 +13,19 @@ export class LoadAccountController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(httpRequest.body)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
+      }
+      const { email } = httpRequest.body
+      const account = await this.loadByEmail.loadByEmail(email)
+      if (!account) {
+        return notFound(new InvalidAccountError())
+      }
+      return ok(account)
+    } catch (error) {
+      return serverError(error)
     }
-    const { email } = httpRequest.body
-    const account = await this.loadByEmail.loadByEmail(email)
-    if (!account) {
-      return notFound(new InvalidAccountError())
-    }
-    return ok(account)
   }
 }
