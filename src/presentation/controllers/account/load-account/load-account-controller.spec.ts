@@ -2,7 +2,7 @@ import { LoadAccountController } from './load-account-controller'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { mockLoadAccountRequest } from '../../../tests/account/mock-load-account'
 import { Validation } from '../../../protocols/validation'
-import { badRequest, notFound, ok } from '../../../helpers/http/http-helper'
+import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { LoadByEmailStub } from '../../../tests/account/mock-load-by-email'
 import { LoadByEmail } from '../../../../domain/usecases/load-by-email'
 import { Account } from '../../../../domain/models/account'
@@ -60,5 +60,14 @@ describe('LoadAccountController', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockLoadAccountRequest())
     expect(httpResponse).toEqual(ok(mockAccount()))
+  })
+
+  test('Should return 500 if LoadByEmail throws', async () => {
+    const { sut, loadByEmailStub } = makeSut()
+    jest.spyOn(loadByEmailStub, 'loadByEmail').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockLoadAccountRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
