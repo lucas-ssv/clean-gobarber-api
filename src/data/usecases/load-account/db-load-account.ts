@@ -6,6 +6,6 @@ export class DbLoadAccount implements LoadAccount {
 
   async load (id: string): Promise<LoadAccount.Result> {
     await this.loadAccountRepository.load(id)
-    return await Promise.resolve(null) as any
+    return null as any
   }
 }
