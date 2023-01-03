@@ -27,7 +27,6 @@ export class AccountRepository implements AddAccountRepository, LoadByEmailRepos
         avatar: true
       }
     })
-    console.log(accountByEmail)
     return accountByEmail as any
   }
 
