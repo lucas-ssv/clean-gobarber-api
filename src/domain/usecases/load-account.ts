@@ -5,5 +5,5 @@ export interface LoadAccount {
 }
 
 export namespace LoadAccount {
-  export type Result = Omit<Account, 'password'>
+  export type Result = Account
 }

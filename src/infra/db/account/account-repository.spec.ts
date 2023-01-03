@@ -81,7 +81,7 @@ describe('AccountRepository', () => {
   describe('update()', () => {
     test('Should update an account on success', async () => {
       const sut = new AccountRepository()
-      await client.account.create({
+      const result = await client.account.create({
         data: {
           name: 'any_name',
           email: 'any_email@mail.com',
@@ -89,8 +89,8 @@ describe('AccountRepository', () => {
         }
       })
       const account = await sut.update({
+        id: result.id,
         name: 'updated_name',
-        email: 'any_email@mail.com',
         newPassword: 'updated_new_password'
       })
       expect(account.name).toBe('updated_name')

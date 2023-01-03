@@ -2,9 +2,9 @@ import { Avatar } from '../../models/avatar'
 import { AddAvatar } from '../../usecases/add-avatar'
 
 export const mockAddAvatarParams = (): AddAvatar.Params => ({
-  email: 'any_email@mail.com',
   name: 'any_name',
-  url: 'any_url'
+  url: 'any_url',
+  accountId: 'any_id'
 })
 
 export const mockAddAvatarResult = (): Avatar => ({

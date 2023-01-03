@@ -1,8 +1,8 @@
 import { UpdateAccount } from '../../usecases/update-account'
 
 export const mockUpdateAccountParams = (): UpdateAccount.Params => ({
+  id: 'any_id',
   name: 'updated_name',
-  email: 'any_email@mail.com',
   currentPassword: 'any_current_password',
   newPassword: 'updated_new_password'
 })

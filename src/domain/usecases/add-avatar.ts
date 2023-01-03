@@ -6,8 +6,8 @@ export interface AddAvatar {
 
 export namespace AddAvatar {
   export type Params = {
-    email: string
     name: string
     url: string
+    accountId: string
   }
 }

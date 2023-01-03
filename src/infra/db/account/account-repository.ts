@@ -47,7 +47,7 @@ export class AccountRepository implements AddAccountRepository, LoadAccountRepos
   async update (params: UpdateAccountRepository.Params): Promise<UpdateAccountRepository.Result> {
     const account = await client.account.update({
       where: {
-        email: params.email
+        id: params.id
       },
       include: {
         avatar: true

@@ -6,6 +6,6 @@ export interface AddAvatarRepository {
 }
 
 export namespace AddAvatarRepository {
-  export type Params = Omit<AddAvatar.Params, 'email'>
+  export type Params = Omit<AddAvatar.Params, 'accountId'>
   export type Result = Avatar
 }
