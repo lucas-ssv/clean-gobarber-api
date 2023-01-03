@@ -23,4 +23,11 @@ describe('DbLoadAccount usecase', () => {
     await sut.load('any_id')
     expect(loadSpy).toHaveBeenCalledWith('any_id')
   })
+
+  test('Should return null if LoadAccountRepository returns null', async () => {
+    const { sut, loadAccountRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null) as any)
+    const account = await sut.load('any_id')
+    expect(account).toBeNull()
+  })
 })
