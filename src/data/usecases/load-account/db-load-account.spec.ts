@@ -37,4 +37,13 @@ describe('DbLoadAccount usecase', () => {
     const account = await sut.load('any_id')
     expect(account).toEqual(mockLoadAccount())
   })
+
+  test('Should throw if LoadAccountRepository throws', async () => {
+    const { sut, loadAccountRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountRepositoryStub, 'load').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.load('any_id')
+    await expect(promise).rejects.toThrow()
+  })
 })
