@@ -3,8 +3,8 @@ import { LoadAccountRepository } from '../../../data/protocols/db/load-account-r
 import { LoadByEmailRepository } from '../../../data/protocols/db/load-by-email-repository'
 import { UpdateAccountRepository } from '../../../data/protocols/db/update-account-repository'
 import { Account } from '../../../domain/models/account'
-import { LoadAccount } from '../../../domain/usecases/load-account'
 import { client } from '../client'
+import { loadAccountHelper } from '../helpers/prisma-helper'
 
 export class AccountRepository implements AddAccountRepository, LoadAccountRepository, LoadByEmailRepository<Account>, UpdateAccountRepository {
   async add (account: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
@@ -20,7 +20,7 @@ export class AccountRepository implements AddAccountRepository, LoadAccountRepos
     return result
   }
 
-  async load (id: string): Promise<LoadAccount.Result> {
+  async load (id: string): Promise<LoadAccountRepository.Result> {
     const account = await client.account.findUnique({
       where: {
         id
@@ -29,11 +29,7 @@ export class AccountRepository implements AddAccountRepository, LoadAccountRepos
         avatar: true
       }
     })
-    const { is_barber: isBarber, avatar_id, password, ...rest } = account as any
-    return {
-      ...rest,
-      isBarber
-    }
+    return account?.id && loadAccountHelper(account as any) as any
   }
 
   async loadByEmail (email: string): Promise<Account> {
