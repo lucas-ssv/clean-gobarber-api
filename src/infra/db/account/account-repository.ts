@@ -24,9 +24,16 @@ export class AccountRepository implements AddAccountRepository, LoadAccountRepos
     const account = await client.account.findUnique({
       where: {
         id
+      },
+      include: {
+        avatar: true
       }
     })
-    return account as any
+    const { is_barber: isBarber, avatar_id, password, ...rest } = account as any
+    return {
+      ...rest,
+      isBarber
+    }
   }
 
   async loadByEmail (email: string): Promise<Account> {
