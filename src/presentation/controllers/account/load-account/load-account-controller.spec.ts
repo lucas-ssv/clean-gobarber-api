@@ -1,70 +1,48 @@
 import { LoadAccountController } from './load-account-controller'
-import { ValidationStub } from '../../../tests/mock-validation'
-import { mockLoadAccountRequest } from '../../../tests/account/mock-load-account'
-import { Validation } from '../../../protocols/validation'
-import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
-import { LoadByEmailStub } from '../../../tests/account/mock-load-by-email'
-import { LoadByEmail } from '../../../../domain/usecases/load-by-email'
-import { Account } from '../../../../domain/models/account'
+import { LoadAccountStub, mockLoadAccountRequest } from '../../../tests/account/mock-load-account'
+import { notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
-import { mockAccount } from '../../../../domain/tests/account/mock-account'
+import { LoadAccount } from '../../../../domain/usecases/load-account'
+import { mockLoadAccount } from '../../../../domain/tests/account/mock-load-account'
 
 type SutTypes = {
   sut: LoadAccountController
-  validationStub: Validation
-  loadByEmailStub: LoadByEmail<Account>
+  loadAccountStub: LoadAccount
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = new ValidationStub()
-  const loadByEmailStub = new LoadByEmailStub()
-  const sut = new LoadAccountController(validationStub, loadByEmailStub)
+  const loadAccountStub = new LoadAccountStub()
+  const sut = new LoadAccountController(loadAccountStub)
   return {
     sut,
-    validationStub,
-    loadByEmailStub
+    loadAccountStub
   }
 }
 
 describe('LoadAccountController', () => {
-  test('Should call Validation with correct values', async () => {
-    const { sut, validationStub } = makeSut()
-    const validationSpy = jest.spyOn(validationStub, 'validate')
-    const mockRequest = mockLoadAccountRequest()
-    await sut.handle(mockRequest)
-    expect(validationSpy).toHaveBeenCalledWith(mockRequest.body)
-  })
-
-  test('Should return 400 if any validation fails', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
-    const httpResponse = await sut.handle(mockLoadAccountRequest())
-    expect(httpResponse).toEqual(badRequest(new Error()))
-  })
-
-  test('Should call LoadByEmail with correct value', async () => {
-    const { sut, loadByEmailStub } = makeSut()
-    const loadSpy = jest.spyOn(loadByEmailStub, 'loadByEmail')
+  test('Should call LoadAccount with correct value', async () => {
+    const { sut, loadAccountStub } = makeSut()
+    const loadSpy = jest.spyOn(loadAccountStub, 'load')
     await sut.handle(mockLoadAccountRequest())
-    expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
+    expect(loadSpy).toHaveBeenCalledWith('any_id')
   })
 
   test('Should return 404 if no account was found', async () => {
-    const { sut, loadByEmailStub } = makeSut()
-    jest.spyOn(loadByEmailStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null) as any)
+    const { sut, loadAccountStub } = makeSut()
+    jest.spyOn(loadAccountStub, 'load').mockReturnValueOnce(Promise.resolve(null) as any)
     const httpResponse = await sut.handle(mockLoadAccountRequest())
     expect(httpResponse).toEqual(notFound(new InvalidAccountError()))
   })
 
-  test('Should return 200 if LoadByEmail succeeds', async () => {
+  test('Should return 200 if LoadAccount succeeds', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockLoadAccountRequest())
-    expect(httpResponse).toEqual(ok(mockAccount()))
+    expect(httpResponse).toEqual(ok(mockLoadAccount()))
   })
 
-  test('Should return 500 if LoadByEmail throws', async () => {
-    const { sut, loadByEmailStub } = makeSut()
-    jest.spyOn(loadByEmailStub, 'loadByEmail').mockImplementationOnce(() => {
+  test('Should return 500 if LoadAccount throws', async () => {
+    const { sut, loadAccountStub } = makeSut()
+    jest.spyOn(loadAccountStub, 'load').mockImplementationOnce(() => {
       throw new Error()
     })
     const httpResponse = await sut.handle(mockLoadAccountRequest())
