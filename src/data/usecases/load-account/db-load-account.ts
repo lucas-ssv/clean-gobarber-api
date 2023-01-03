@@ -5,7 +5,10 @@ export class DbLoadAccount implements LoadAccount {
   constructor (private readonly loadAccountRepository: LoadAccountRepository) {}
 
   async load (id: string): Promise<LoadAccount.Result> {
-    await this.loadAccountRepository.load(id)
+    const account = await this.loadAccountRepository.load(id)
+    if (account) {
+      return account
+    }
     return null as any
   }
 }
