@@ -1,6 +1,7 @@
 import { DbLoadAccount } from './db-load-account'
 import { LoadAccountRepositoryStub } from '../../tests/db/mock-load-account-repository'
 import { LoadAccountRepository } from '../../protocols/db/load-account-repository'
+import { mockLoadAccount } from '../../../domain/tests/account/mock-load-account'
 
 type SutTypes = {
   sut: DbLoadAccount
@@ -29,5 +30,11 @@ describe('DbLoadAccount usecase', () => {
     jest.spyOn(loadAccountRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null) as any)
     const account = await sut.load('any_id')
     expect(account).toBeNull()
+  })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.load('any_id')
+    expect(account).toEqual(mockLoadAccount())
   })
 })
