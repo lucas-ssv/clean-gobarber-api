@@ -22,8 +22,7 @@ export class DbAuthentication implements Authentication {
           email
         })
         return {
-          name: account.name,
-          email,
+          id: account.id,
           token
         }
       }

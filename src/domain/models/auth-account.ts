@@ -1,5 +1,4 @@
 export interface AuthAccount {
-  name: string
-  email: string
+  id: string
   token: string
 }

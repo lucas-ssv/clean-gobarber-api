@@ -103,8 +103,7 @@ describe('DbAuthentication usecase', () => {
     const { sut } = makeSut()
     const authAccount = await sut.auth('any_email@mail.com', 'any_password')
     expect(authAccount).toEqual({
-      name: 'any_name',
-      email: 'any_email@mail.com',
+      id: 'any_id',
       token: 'any_token'
     })
   })

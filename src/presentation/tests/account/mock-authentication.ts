@@ -2,8 +2,7 @@ import { AuthAccount } from '../../../domain/models/auth-account'
 import { Authentication } from '../../../domain/usecases/authentication'
 
 export const mockAuthAccount = (): AuthAccount => ({
-  name: 'any_name',
-  email: 'any_email@mail.com',
+  id: 'any_id',
   token: 'any_token'
 })
 
