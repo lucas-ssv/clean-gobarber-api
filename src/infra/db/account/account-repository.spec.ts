@@ -29,6 +29,23 @@ describe('AccountRepository', () => {
     })
   })
 
+  describe('load()', () => {
+    test('Should load account on load success', async () => {
+      const sut = new AccountRepository()
+      await client.account.create({
+        data: {
+          id: 'unique_id',
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password'
+        }
+      })
+      const account = await sut.load('unique_id')
+      expect(account).toBeTruthy()
+      expect(account.id).toBe('unique_id')
+    })
+  })
+
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
       const mockEmail = 'any_email@mail.com'
