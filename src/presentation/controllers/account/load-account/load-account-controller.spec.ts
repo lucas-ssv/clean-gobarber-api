@@ -2,11 +2,12 @@ import { LoadAccountController } from './load-account-controller'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { mockLoadAccountRequest } from '../../../tests/account/mock-load-account'
 import { Validation } from '../../../protocols/validation'
-import { badRequest, notFound } from '../../../helpers/http/http-helper'
+import { badRequest, notFound, ok } from '../../../helpers/http/http-helper'
 import { LoadByEmailStub } from '../../../tests/account/mock-load-by-email'
 import { LoadByEmail } from '../../../../domain/usecases/load-by-email'
 import { Account } from '../../../../domain/models/account'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
+import { mockAccount } from '../../../../domain/tests/account/mock-account'
 
 type SutTypes = {
   sut: LoadAccountController
@@ -53,5 +54,11 @@ describe('LoadAccountController', () => {
     jest.spyOn(loadByEmailStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null) as any)
     const httpResponse = await sut.handle(mockLoadAccountRequest())
     expect(httpResponse).toEqual(notFound(new InvalidAccountError()))
+  })
+
+  test('Should return 200 if LoadByEmail succeeds', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockLoadAccountRequest())
+    expect(httpResponse).toEqual(ok(mockAccount()))
   })
 })
