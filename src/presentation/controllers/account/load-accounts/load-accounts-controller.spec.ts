@@ -50,7 +50,12 @@ describe('LoadAccountsController', () => {
   test('Should return 200 if LoadAccounts returns a list of accounts', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockLoadAccountsRequest())
-    expect(httpResponse).toEqual(ok(mockAccounts()))
+    const results = mockAccounts()
+    const accounts = results.map(account => {
+      const { password, ...restAccount } = account
+      return { ...restAccount }
+    })
+    expect(httpResponse).toEqual(ok(accounts))
   })
 
   test('Should return 500 if LoadAccounts throws', async () => {

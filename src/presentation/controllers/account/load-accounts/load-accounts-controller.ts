@@ -17,7 +17,13 @@ export class LoadAccountsController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const accounts = await this.loadAccounts.loadAll(request)
+      const results = await this.loadAccounts.loadAll(request)
+      const accounts = results.map(account => {
+        const { password, ...restAccount } = account
+        return {
+          ...restAccount
+        }
+      })
       return ok(accounts)
     } catch (error) {
       return serverError(error)
