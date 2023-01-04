@@ -1,12 +1,14 @@
 import { AddAccountRepository } from '../../../data/protocols/db/add-account-repository'
 import { LoadAccountRepository } from '../../../data/protocols/db/load-account-repository'
+import { LoadAccountsRepository } from '../../../data/protocols/db/load-accounts-repository'
 import { LoadByEmailRepository } from '../../../data/protocols/db/load-by-email-repository'
 import { UpdateAccountRepository } from '../../../data/protocols/db/update-account-repository'
 import { Account } from '../../../domain/models/account'
+import { LoadAccounts } from '../../../domain/usecases/load-accounts'
 import { client } from '../client'
 import { loadAccountHelper } from '../helpers/prisma-helper'
 
-export class AccountRepository implements AddAccountRepository, LoadAccountRepository, LoadByEmailRepository<Account>, UpdateAccountRepository {
+export class AccountRepository implements AddAccountRepository, LoadAccountRepository, LoadAccountsRepository, LoadByEmailRepository<Account>, UpdateAccountRepository {
   async add (account: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountData = await client.account.create({
       data: {
@@ -30,6 +32,26 @@ export class AccountRepository implements AddAccountRepository, LoadAccountRepos
       }
     })
     return account?.id && loadAccountHelper(account as any) as any
+  }
+
+  async loadAll (params: LoadAccounts.Params): Promise<LoadAccountsRepository.Result> {
+    const result = await client.account.findMany({
+      where: {
+        is_barber: params.isBarber
+      },
+      include: {
+        avatar: true
+      }
+    })
+    const accounts = result.map(account => ({
+      id: account.id,
+      name: account.name,
+      email: account.email,
+      password: account.password,
+      isBarber: account.is_barber,
+      avatar: account.avatar
+    }))
+    return accounts as any
   }
 
   async loadByEmail (email: string): Promise<Account> {
