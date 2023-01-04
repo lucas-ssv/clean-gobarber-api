@@ -6,7 +6,7 @@ export class DbLoadAccounts implements LoadAccounts {
   constructor (private readonly loadAccountsRepository: LoadAccountsRepository) {}
 
   async loadAll (params: LoadAccounts.Params): Promise<Account[]> {
-    await this.loadAccountsRepository.loadAll({ isBarber: params.isBarber })
-    return await Promise.resolve(null) as any
+    const accounts = await this.loadAccountsRepository.loadAll({ isBarber: params.isBarber })
+    return accounts
   }
 }
