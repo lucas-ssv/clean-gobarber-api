@@ -10,6 +10,10 @@ export const created = (): HttpResponse => ({
   statusCode: HttpStatusCode.created
 })
 
+export const noContent = (): HttpResponse => ({
+  statusCode: HttpStatusCode.ok
+})
+
 export const badRequest = (error: Error): HttpResponse => ({
   statusCode: HttpStatusCode.badRequest,
   body: error

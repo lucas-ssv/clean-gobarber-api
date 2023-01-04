@@ -7,5 +7,5 @@ import { auth } from '../middlewares/auth/auth'
 const upload = adaptMulter()
 
 export default (router: Router): void => {
-  router.post('/add-avatar', auth, upload.single('avatar'), adaptRoute(makeAddAvatarController()))
+  router.post('/add-avatar/:id', auth, upload.single('avatar'), adaptRoute(makeAddAvatarController()))
 }

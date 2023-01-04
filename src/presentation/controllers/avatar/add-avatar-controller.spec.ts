@@ -30,7 +30,6 @@ describe('AddAvatarController', () => {
     const validationSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockAvatarRequest())
     expect(validationSpy).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
       name: 'any_name',
       url: 'any_destination/any_filename.png'
     })
@@ -48,7 +47,7 @@ describe('AddAvatarController', () => {
     const addSpy = jest.spyOn(addAvatarStub, 'add')
     await sut.handle(mockAvatarRequest())
     expect(addSpy).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
+      accountId: 'any_id',
       name: 'any_name',
       url: 'any_destination/any_filename.png'
     })

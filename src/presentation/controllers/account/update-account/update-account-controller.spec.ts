@@ -3,8 +3,7 @@ import { UpdateAccount } from '../../../../domain/usecases/update-account'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { mockHttpRequestUpdate, UpdateAccountStub } from '../../../tests/account/mock-update-account'
 import { Validation } from '../../../protocols/validation'
-import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
-import { mockUpdateAccountResult } from '../../../../domain/tests/account/mock-update-account'
+import { badRequest, noContent, notFound, serverError } from '../../../helpers/http/http-helper'
 import { InvalidAccountError } from '../../../errors/invalid-account-error'
 import { RequiredFieldError } from '../../../errors/required-field-error'
 import { MinLengthFieldError } from '../../../errors/min-length-field-error'
@@ -45,8 +44,10 @@ describe('UpdateAccountController', () => {
     const { sut, validationStub } = makeSut()
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MinLengthFieldError('currentPassword', 6))
     const httpResponse = await sut.handle({
+      params: {
+        id: 'any_id'
+      },
       body: {
-        email: 'any_email@mail.com',
         currentPassword: '123'
       }
     })
@@ -57,8 +58,10 @@ describe('UpdateAccountController', () => {
     const { sut, validationStub } = makeSut()
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MinLengthFieldError('newPassword', 6))
     const httpResponse = await sut.handle({
+      params: {
+        id: 'any_id'
+      },
       body: {
-        email: 'any_email@mail.com',
         newPassword: '123'
       }
     })
@@ -69,7 +72,10 @@ describe('UpdateAccountController', () => {
     const { sut, updateAccountStub } = makeSut()
     const updateSpy = jest.spyOn(updateAccountStub, 'update')
     await sut.handle(mockHttpRequestUpdate())
-    expect(updateSpy).toHaveBeenCalledWith(mockHttpRequestUpdate().body)
+    expect(updateSpy).toHaveBeenCalledWith({
+      id: mockHttpRequestUpdate().params.id,
+      ...mockHttpRequestUpdate().body
+    })
   })
 
   test('Should return 404 if account does not exists', async () => {
@@ -82,7 +88,7 @@ describe('UpdateAccountController', () => {
   test('Should return 200 if account was updated on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockHttpRequestUpdate())
-    expect(httpResponse).toEqual(ok(mockUpdateAccountResult()))
+    expect(httpResponse).toEqual(noContent())
   })
 
   test('Should return 500 if UpdateAccount throws', async () => {

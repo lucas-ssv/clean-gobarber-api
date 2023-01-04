@@ -16,11 +16,12 @@ export class AddAvatarController implements Controller {
       const request = Object.assign({}, httpRequest.body, {
         url: httpRequest.file.path
       })
+      const { id } = httpRequest.params
       const error = this.validation.validate(request)
       if (error) {
         return badRequest(error)
       }
-      const avatar = await this.addAvatar.add(request)
+      const avatar = await this.addAvatar.add({ accountId: id, ...request })
       if (!avatar) {
         return notFound(new InvalidAccountError())
       }

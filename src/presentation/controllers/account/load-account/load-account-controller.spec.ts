@@ -37,7 +37,8 @@ describe('LoadAccountController', () => {
   test('Should return 200 if LoadAccount succeeds', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockLoadAccountRequest())
-    expect(httpResponse).toEqual(ok(mockLoadAccount()))
+    const { password, ...restAccount } = mockLoadAccount()
+    expect(httpResponse).toEqual(ok(restAccount))
   })
 
   test('Should return 500 if LoadAccount throws', async () => {

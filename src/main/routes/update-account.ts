@@ -4,5 +4,5 @@ import { auth } from '../middlewares/auth/auth'
 import { Router } from 'express'
 
 export default (router: Router): void => {
-  router.put('/update-account', auth, adaptRoute(makeUpdateAccountController()))
+  router.put('/update-account/:id', auth, adaptRoute(makeUpdateAccountController()))
 }

@@ -14,7 +14,8 @@ export class LoadAccountController implements Controller {
       if (!account) {
         return notFound(new InvalidAccountError())
       }
-      return ok(account)
+      const { password, ...restAccount } = account
+      return ok(restAccount)
     } catch (error) {
       return serverError(error)
     }

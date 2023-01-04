@@ -4,11 +4,13 @@ import { mockAddAvatarResult } from '../../../domain/tests/avatar/mock-avatar'
 import { HttpRequest } from '../../protocols/http'
 
 export const mockAvatarRequest = (): HttpRequest => ({
+  params: {
+    id: 'any_id'
+  },
   file: {
     path: 'any_destination/any_filename.png'
   },
   body: {
-    email: 'any_email@mail.com',
     name: 'any_name',
   }
 })
