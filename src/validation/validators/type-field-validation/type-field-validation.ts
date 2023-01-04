@@ -8,6 +8,9 @@ export class TypeFieldValidation implements Validation {
   ) {}
 
   validate (input: object): Error {
+    if (typeof input[this.fieldName] === this.fieldType) {
+      return null as any
+    }
     return new TypeFieldError(this.fieldName, this.fieldType)
   }
 }
