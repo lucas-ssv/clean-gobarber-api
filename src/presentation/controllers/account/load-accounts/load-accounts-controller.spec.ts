@@ -2,7 +2,7 @@ import { LoadAccountsController } from './load-accounts-controller'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { Validation } from '../../../protocols/validation'
 import { LoadAccountsStub, mockLoadAccountsRequest } from '../../../tests/account/mock-load-accounts'
-import { badRequest, ok } from '../../../helpers/http/http-helper'
+import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
 import { LoadAccounts } from '../../../../domain/usecases/load-accounts'
 import { mockAccounts } from '../../../../domain/tests/account/mock-accounts'
 
@@ -51,5 +51,14 @@ describe('LoadAccountsController', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockLoadAccountsRequest())
     expect(httpResponse).toEqual(ok(mockAccounts()))
+  })
+
+  test('Should return 500 if LoadAccounts throws', async () => {
+    const { sut, loadAccountsStub } = makeSut()
+    jest.spyOn(loadAccountsStub, 'loadAll').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockLoadAccountsRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
