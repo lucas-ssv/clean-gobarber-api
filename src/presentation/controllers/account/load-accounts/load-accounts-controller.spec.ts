@@ -1,20 +1,24 @@
 import { LoadAccountsController } from './load-accounts-controller'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { Validation } from '../../../protocols/validation'
-import { mockLoadAccountsRequest } from '../../../tests/account/mock-load-accounts'
+import { LoadAccountsStub, mockLoadAccountsRequest } from '../../../tests/account/mock-load-accounts'
 import { badRequest } from '../../../helpers/http/http-helper'
+import { LoadAccounts } from '../../../../domain/usecases/load-accounts'
 
 type SutTypes = {
   sut: LoadAccountsController
   validationStub: Validation
+  loadAccountsStub: LoadAccounts
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub()
-  const sut = new LoadAccountsController(validationStub)
+  const loadAccountsStub = new LoadAccountsStub()
+  const sut = new LoadAccountsController(validationStub, loadAccountsStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    loadAccountsStub
   }
 }
 
@@ -32,5 +36,13 @@ describe('LoadAccountsController', () => {
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockLoadAccountsRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
+  test('Should call LoadAccounts with correct value', async () => {
+    const { sut, loadAccountsStub } = makeSut()
+    const loadSpy = jest.spyOn(loadAccountsStub, 'loadAll')
+    const request = mockLoadAccountsRequest()
+    await sut.handle(request)
+    expect(loadSpy).toHaveBeenCalledWith(request.body)
   })
 })
