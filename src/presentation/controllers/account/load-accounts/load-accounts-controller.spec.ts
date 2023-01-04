@@ -2,8 +2,9 @@ import { LoadAccountsController } from './load-accounts-controller'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { Validation } from '../../../protocols/validation'
 import { LoadAccountsStub, mockLoadAccountsRequest } from '../../../tests/account/mock-load-accounts'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, ok } from '../../../helpers/http/http-helper'
 import { LoadAccounts } from '../../../../domain/usecases/load-accounts'
+import { mockAccounts } from '../../../../domain/tests/account/mock-accounts'
 
 type SutTypes = {
   sut: LoadAccountsController
@@ -44,5 +45,11 @@ describe('LoadAccountsController', () => {
     const request = mockLoadAccountsRequest()
     await sut.handle(request)
     expect(loadSpy).toHaveBeenCalledWith(request.body)
+  })
+
+  test('Should return 200 if LoadAccounts returns a list of accounts', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockLoadAccountsRequest())
+    expect(httpResponse).toEqual(ok(mockAccounts()))
   })
 })
