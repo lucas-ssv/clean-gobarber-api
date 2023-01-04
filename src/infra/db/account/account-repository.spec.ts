@@ -46,6 +46,25 @@ describe('AccountRepository', () => {
     })
   })
 
+  describe('loadAll()', () => {
+    test('Should load all accounts barbers on success', async () => {
+      const sut = new AccountRepository()
+      await client.account.create({
+        data: {
+          id: 'any_id',
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          is_barber: true
+        }
+      })
+      const accounts = await sut.loadAll({ isBarber: true })
+      expect(accounts.length).toBe(1)
+      expect(accounts[0].id).toBe('any_id')
+      expect(accounts[0].name).toBe('any_name')
+    })
+  })
+
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
       const mockEmail = 'any_email@mail.com'
