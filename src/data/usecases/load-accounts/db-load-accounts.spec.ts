@@ -23,4 +23,11 @@ describe('DbLoadAccounts usecase', () => {
     await sut.loadAll({ isBarber: true })
     expect(loadSpy).toHaveBeenCalledWith({ isBarber: true })
   })
+
+  test('Should return an empty list if LoadAccountsRepository returns empty', async () => {
+    const { sut, loadAccountsRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountsRepositoryStub, 'loadAll').mockReturnValueOnce(Promise.resolve([]))
+    const accounts = await sut.loadAll({ isBarber: true })
+    expect(accounts).toEqual([])
+  })
 })
