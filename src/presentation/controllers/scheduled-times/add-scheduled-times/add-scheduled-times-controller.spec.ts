@@ -1,5 +1,5 @@
 import { AddScheduledTimes } from '../../../../domain/usecases/add-scheduled-times'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, created } from '../../../helpers/http/http-helper'
 import { Validation } from '../../../protocols/validation'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { AddScheduledTimesStub, mockAddScheduledTimesRequest } from '../../../tests/scheduled-times/mock-add-scheduled-times'
@@ -52,5 +52,11 @@ describe('AddScheduledTimesController', () => {
       time: 'any_time',
       accountId: 'any_account_id'
     })
+  })
+
+  test('Should return 201 if AddScheduledTimes succeeds', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockAddScheduledTimesRequest())
+    expect(httpResponse).toEqual(created())
   })
 })
