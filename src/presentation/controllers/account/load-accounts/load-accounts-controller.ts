@@ -19,7 +19,7 @@ export class LoadAccountsController implements Controller {
       }
       const results = await this.loadAccounts.loadAll(request)
       const accounts = results.map(account => {
-        const { password, ...restAccount } = account
+        const { password, email, isBarber, ...restAccount } = account
         return {
           ...restAccount
         }
