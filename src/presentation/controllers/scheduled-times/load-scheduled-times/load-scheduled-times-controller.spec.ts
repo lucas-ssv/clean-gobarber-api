@@ -1,7 +1,7 @@
-import { mockScheduledTimes } from '../../../domain/tests/scheduled-times/mock-scheduled-times'
-import { LoadScheduledTimes } from '../../../domain/usecases/load-scheduled-times'
-import { ok, serverError } from '../../helpers/http/http-helper'
-import { LoadScheduledTimesStub } from '../../tests/scheduled-times/mock-load-scheduled-times'
+import { mockScheduledTimes } from '../../../../domain/tests/scheduled-times/mock-scheduled-times'
+import { LoadScheduledTimes } from '../../../../domain/usecases/load-scheduled-times'
+import { ok, serverError } from '../../../helpers/http/http-helper'
+import { LoadScheduledTimesStub } from '../../../tests/scheduled-times/mock-load-scheduled-times'
 import { LoadScheduledTimesController } from './load-scheduled-times-controller'
 
 type SutTypes = {
