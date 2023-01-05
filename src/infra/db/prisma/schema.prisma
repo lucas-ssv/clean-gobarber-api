@@ -30,9 +30,10 @@ model Avatar {
 }
 
 model ScheduledTimes {
-  id         String  @id @default(uuid())
+  id         String   @id @default(uuid())
+  date       DateTime @default(now())
   time       String
-  account    Account @relation(fields: [account_id], references: [id])
+  account    Account  @relation(fields: [account_id], references: [id])
   account_id String
 
   @@map("scheduled_times")
