@@ -1,5 +1,5 @@
 import { AddScheduledTimes } from '../../../../domain/usecases/add-scheduled-times'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, created } from '../../../helpers/http/http-helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -17,6 +17,6 @@ export class AddScheduledTimesController implements Controller {
       return badRequest(error)
     }
     await this.addScheduledTimes.add(request)
-    return await Promise.resolve(null) as any
+    return created()
   }
 }
