@@ -1,8 +1,10 @@
+import { AddScheduledTimesRepository } from '../../../data/protocols/db/add-scheduled-times-repository'
 import { LoadScheduledTimesRepository } from '../../../data/protocols/db/load-scheduled-times-repository'
 import { ScheduledTimeResult } from '../../../domain/models/scheduled-time-result'
+import { AddScheduledTimes } from '../../../domain/usecases/add-scheduled-times'
 import { client } from '../client'
 
-export class ScheduledTimesRepository implements LoadScheduledTimesRepository {
+export class ScheduledTimesRepository implements LoadScheduledTimesRepository, AddScheduledTimesRepository {
   async loadAll (): Promise<ScheduledTimeResult[]> {
     const scheduledTimes = await client.scheduledTimes.findMany({
       include: {
@@ -21,5 +23,15 @@ export class ScheduledTimesRepository implements LoadScheduledTimesRepository {
       }
     }))
     return result
+  }
+
+  async add (params: AddScheduledTimes.Params): Promise<void> {
+    await client.scheduledTimes.create({
+      data: {
+        date: params.date,
+        time: params.time,
+        account_id: params.accountId
+      }
+    })
   }
 }
