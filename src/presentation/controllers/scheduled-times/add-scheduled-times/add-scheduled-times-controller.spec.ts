@@ -1,5 +1,5 @@
 import { AddScheduledTimes } from '../../../../domain/usecases/add-scheduled-times'
-import { badRequest, created } from '../../../helpers/http/http-helper'
+import { badRequest, created, serverError } from '../../../helpers/http/http-helper'
 import { Validation } from '../../../protocols/validation'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { AddScheduledTimesStub, mockAddScheduledTimesRequest } from '../../../tests/scheduled-times/mock-add-scheduled-times'
@@ -58,5 +58,14 @@ describe('AddScheduledTimesController', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockAddScheduledTimesRequest())
     expect(httpResponse).toEqual(created())
+  })
+
+  test('Should return 500 if AddScheduledTimes throws', async () => {
+    const { sut, addScheduledTimesStub } = makeSut()
+    jest.spyOn(addScheduledTimesStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockAddScheduledTimesRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
