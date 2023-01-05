@@ -1,3 +1,4 @@
+import { badRequest } from '../../../helpers/http/http-helper'
 import { Validation } from '../../../protocols/validation'
 import { ValidationStub } from '../../../tests/mock-validation'
 import { mockAddScheduledTimesRequest } from '../../../tests/scheduled-times/mock-add-scheduled-times'
@@ -29,5 +30,12 @@ describe('AddScheduledTimesController', () => {
       time: '09:00',
       accountId: 'any_account_id'
     })
+  })
+
+  test('Should return 400 if any validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpResponse = await sut.handle(mockAddScheduledTimesRequest())
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 })
