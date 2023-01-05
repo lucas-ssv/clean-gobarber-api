@@ -1,5 +1,5 @@
 import { AddScheduledTimes } from '../../../../domain/usecases/add-scheduled-times'
-import { badRequest, created } from '../../../helpers/http/http-helper'
+import { badRequest, created, serverError } from '../../../helpers/http/http-helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -11,12 +11,16 @@ export class AddScheduledTimesController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const request = httpRequest.body
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
+    try {
+      const request = httpRequest.body
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.addScheduledTimes.add(request)
+      return created()
+    } catch (error) {
+      return serverError(error)
     }
-    await this.addScheduledTimes.add(request)
-    return created()
   }
 }
