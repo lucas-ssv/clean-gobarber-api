@@ -50,4 +50,13 @@ describe('DbAddScheduledTimes usecase', () => {
       accountId: 'any_account_id'
     })
   })
+
+  test('Should throw if AddScheduledTimesRepository throws', async () => {
+    const { sut, addScheduledTimesRepositoryStub } = makeSut()
+    jest.spyOn(addScheduledTimesRepositoryStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockAddScheduledTimesParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
