@@ -1,5 +1,7 @@
+import { ScheduledTimeResult } from '../models/scheduled-time-result'
+
 export interface AddScheduledTimes {
-  add: (params: AddScheduledTimes.Params) => Promise<void>
+  add: (params: AddScheduledTimes.Params) => Promise<ScheduledTimeResult>
 }
 
 export namespace AddScheduledTimes {

@@ -2,6 +2,7 @@ import { ScheduledTimeResult } from '../../models/scheduled-time-result'
 
 export const mockScheduledTimes = (): ScheduledTimeResult[] => ([{
   id: 'any_id',
+  date: new Date(),
   time: 'any_time',
   account: {
     id: 'any_id',
@@ -12,6 +13,7 @@ export const mockScheduledTimes = (): ScheduledTimeResult[] => ([{
   }
 }, {
   id: 'other_id',
+  date: new Date(),
   time: 'other_time',
   account: {
     id: 'other_id',

@@ -1,5 +1,6 @@
 import { AddScheduledTimes } from '../../../../domain/usecases/add-scheduled-times'
-import { badRequest, created, serverError } from '../../../helpers/http/http-helper'
+import { InvalidAccountError } from '../../../errors/invalid-account-error'
+import { badRequest, created, notFound, serverError } from '../../../helpers/http/http-helper'
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../../../protocols/http'
 import { Validation } from '../../../protocols/validation'
@@ -17,7 +18,10 @@ export class AddScheduledTimesController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.addScheduledTimes.add(request)
+      const scheduledTimes = await this.addScheduledTimes.add(request)
+      if (!scheduledTimes) {
+        return notFound(new InvalidAccountError())
+      }
       return created()
     } catch (error) {
       return serverError(error)

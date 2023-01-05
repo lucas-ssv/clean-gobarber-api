@@ -51,6 +51,23 @@ describe('DbAddScheduledTimes usecase', () => {
     })
   })
 
+  test('Should return a scheduled times on success', async () => {
+    const { sut } = makeSut()
+    const scheduledTimes = await sut.add(mockAddScheduledTimesParams())
+    expect(scheduledTimes).toEqual({
+      id: 'any_id',
+      date: new Date(),
+      time: 'any_time',
+      account: {
+        id: 'any_account_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        isBarber: false
+      }
+    })
+  })
+
   test('Should throw if AddScheduledTimesRepository throws', async () => {
     const { sut, addScheduledTimesRepositoryStub } = makeSut()
     jest.spyOn(addScheduledTimesRepositoryStub, 'add').mockImplementationOnce(() => {

@@ -13,6 +13,7 @@ export class ScheduledTimesRepository implements LoadScheduledTimesRepository, A
     })
     const result = scheduledTimes.map(scheduleTime => ({
       id: scheduleTime.id,
+      date: scheduleTime.date,
       time: scheduleTime.time,
       account: {
         id: scheduleTime.account.id,
@@ -25,13 +26,20 @@ export class ScheduledTimesRepository implements LoadScheduledTimesRepository, A
     return result
   }
 
-  async add (params: AddScheduledTimes.Params): Promise<void> {
-    await client.scheduledTimes.create({
+  async add (params: AddScheduledTimes.Params): Promise<ScheduledTimeResult> {
+    const scheduledTimes = await client.scheduledTimes.create({
       data: {
         date: params.date,
         time: params.time,
         account_id: params.accountId
+      },
+      include: {
+        account: true
       }
     })
+    const { account_id, ...restScheduledTimes } = scheduledTimes
+    return {
+      ...restScheduledTimes
+    } as any
   }
 }

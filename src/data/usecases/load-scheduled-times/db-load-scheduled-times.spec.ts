@@ -3,6 +3,8 @@ import { LoadScheduledTimesRepositoryStub } from '../../tests/db/mock-load-sched
 import { LoadScheduledTimesRepository } from '../../protocols/db/load-scheduled-times-repository'
 import { mockScheduledTimes } from '../../../domain/tests/scheduled-times/mock-scheduled-times'
 
+jest.useFakeTimers().setSystemTime(new Date())
+
 type SutTypes = {
   sut: DbLoadScheduledTimes
   loadScheduledTimesRepositoryStub: LoadScheduledTimesRepository
