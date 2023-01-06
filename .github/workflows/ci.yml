@@ -10,24 +10,34 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/checkout@v3
+      with:
+        node-version: 19
+        cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check tests
+        run: npm run test:ci
+
+      - name: Check linting
+        run: npm run lint
+
+      - name: Check commit messages
+        uses: wagoid/commitlint-github-action@v5
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
         with:
-          node-version: 19
-          cache: 'npm'
-        
-        - name: Install dependencies
-          run: npm install
-
-        - name: Check tests
-          run: npm run test:ci
-
-        - name: Check linting
-          run: npm run lint
-
-        - name: Check commit messages
-          uses: wagoid/commitlint-github-action@v5
+          github-token: ${{ secrets.GITHUB_TOKEN }}
