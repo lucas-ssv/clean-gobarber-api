@@ -2,29 +2,29 @@ name: ci
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Set up Node.js
-      uses: actions/checkout@v3
-      with:
-        node-version: 19
-        cache: 'npm'
-      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm install
 
@@ -32,7 +32,7 @@ jobs:
         run: npm run test:ci
 
       - name: Check linting
-        run: npm run lint
+        run: npm run eslint
 
       - name: Check commit messages
         uses: wagoid/commitlint-github-action@v5
