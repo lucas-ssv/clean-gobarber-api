@@ -10,14 +10,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DATABASE_URL: postgresql://test:test@127.0.0.1:5432/test?schema=public
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: test
-      JWT_SECRET: secret
-      JWT_EXPIRES_IN: 365d
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/gobarber
 
     steps:
       - name: Checkout repository
@@ -34,11 +43,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run migrations prisma
+        run: npx prisma migrate deploy
+
       - name: Check tests
         run: npm run test:ci
 
       - name: Check linting
-        run: npm run eslint
+        run: npm run lint
 
       - name: Check commit messages
         uses: wagoid/commitlint-github-action@v5
